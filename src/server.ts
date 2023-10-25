@@ -142,6 +142,42 @@ app.get("/products/estoque", async (_, res) => {
     res.json(products);
 });
 
+app.put("/products/estoque/:id", async (req, res) => {
+    const id = Number(req.params.id);
+
+    const { status, purchase_price, expiry_date, update_at, quantity } = req.body;
+
+    try {
+        const product = await prisma.stock.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!product) {
+            return res.status(404).send({ message: "Produto não encontrado" });
+        }
+
+        await prisma.stock.update({
+            where: {
+                id,
+            },
+            data: {
+                status: status,
+                purchase_price: purchase_price,
+                expiry_date: new Date(expiry_date),
+                update_at: new Date(update_at),
+                quantity: quantity,
+            },
+        });
+
+        res.status(200).send();
+    } catch (error) {
+        return res
+            .status(500)
+            .send({ message: "Falha ao atualizar o estoque do produto" });
+    }
+});
 
 app.listen(port, () => {
     console.log(`Servidor em execucação na porta ${port}`);
