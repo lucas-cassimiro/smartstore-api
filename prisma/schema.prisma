@@ -93,6 +93,8 @@ model Stock {
   update_at      DateTime? @db.Timestamp(6)
   quantity       Int?
   products       Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
+
+  @@map("stocks")
 }
 
 model Storage {
