@@ -126,6 +126,22 @@ app.post("/cadastro", async (req, res) => {
     res.status(201).send();
 });
 
+app.get("/products/estoque", async (_, res) => {
+    const products = await prisma.stock.findMany({
+        include: {
+            products: {
+                include: {
+                    colors: true,
+                    storages: true,
+                    categories: true,
+                },
+            },
+        },
+    });
+
+    res.json(products);
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor em execucação na porta ${port}`);
