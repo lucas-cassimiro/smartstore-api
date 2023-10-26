@@ -7,7 +7,9 @@ const prisma = new PrismaClient();
 
 app.use(express.json());
 
-app.get("/", async (_, res) => {
+// listagem de todos os produtos -- TABELA PRODUCTS
+
+app.get("/products", async (_, res) => {
     const products = await prisma.product.findMany({
         include: {
             colors: true,
@@ -19,61 +21,68 @@ app.get("/", async (_, res) => {
     res.json(products);
 });
 
-app.get("/:id", async (req, res) => {
-    const id = Number(req.params.id);
+// listagem produto específico -- ID ou CATEGORIA
+// rota para listagem de produtos onde vai buscar a categoria de produtos desejada, seja ela "/iphone", "/android", "/smartwatch", etc...
 
+app.get("/products/:param", async (req, res) => {
+    const param = req.params.param;
     try {
-        const product = await prisma.product.findUnique({
-            where: {
-                id,
-            },
-        });
+        const numericParam = Number(param);
 
-        if (!product) {
-            return res.status(404).send({ message: "Produto não encontrado" });
-        }
+        if (!isNaN(numericParam)) {
+            const id = Number(param);
+            const product = await prisma.product.findUnique({
+                where: {
+                    id,
+                },
+            });
 
-        const products = await prisma.product.findMany({
-            include: {
-                colors: true,
-                storages: true,
-                categories: true,
-            },
-            where: {
-                id,
-            },
-        });
-        res.status(200).send(products);
-    } catch (error) {
-        return res.status(500).send({ message: "Falha ao filtrar produtos" });
-    }
-});
+            if (!product) {
+                return res.status(404).send({ message: "Produto não encontrado" });
+            }
 
-app.get("/shop/:categorie", async (req, res) => {
-    const categorie = req.params.categorie;
-    try {
-        const products = await prisma.product.findMany({
-            include: {
-                colors: true,
-                storages: true,
-                categories: true,
-            },
-            where: {
-                categories: {
-                    name: {
-                        equals: categorie,
-                        mode: "insensitive",
+            const products = await prisma.product.findMany({
+                include: {
+                    colors: true,
+                    storages: true,
+                    categories: true,
+                },
+                where: {
+                    id,
+                },
+            });
+
+            res.status(200).send(products);
+        } else {
+            const products = await prisma.product.findMany({
+                include: {
+                    colors: true,
+                    storages: true,
+                    categories: true,
+                },
+                where: {
+                    categories: {
+                        name: {
+                            equals: param,
+                            mode: "insensitive",
+                        },
                     },
                 },
-            },
-        });
-        res.status(200).send(products);
+            });
+
+            if (products.length === 0) {
+                return res.status(404).send({ message: "Categoria não encontrada" });
+            }
+            res.status(200).send(products);
+        }
     } catch (error) {
-        return res.status(500).send({ message: "Falha ao buscar os produtos " });
+        return res.status(500).send({ message: "Falha na consulta de produtos" });
     }
 });
 
-app.post("/cadastro", async (req, res) => {
+// rota para cadastro de novos produtos
+
+app.post("/products", async (req, res) => {
     const {
         name,
         price,
@@ -126,7 +135,9 @@ app.post("/cadastro", async (req, res) => {
     res.status(201).send();
 });
 
-app.get("/products/estoque", async (_, res) => {
+// rota para lista dos produtos em estoque  --> no front-end fazer tratamento para mostrar os detalhes dos produtos
+
+app.get("/estoque", async (_, res) => {
     const products = await prisma.stock.findMany({
         include: {
             products: {
@@ -142,10 +153,15 @@ app.get("/products/estoque", async (_, res) => {
     res.json(products);
 });
 
-app.put("/products/estoque/:id", async (req, res) => {
+// rota para cadastrar novas quantidades de estoque do produto específico que chegou na loja
+// no front-end vamos mostrar a tabela STOCKS, pois os IDS de PRODUCTS e STOCKS são iguais (rota de cima).
+// iremos mostrar também os nomes dos produtos, com seus respectivos ID's para conseguir mostrar a quantidade de cada um no estoque
+
+app.put("/estoque/:id", async (req, res) => {
     const id = Number(req.params.id);
 
-    const { status, purchase_price, expiry_date, update_at, quantity } = req.body;
+    const { status, purchase_price, expiry_date, updated_at, quantity } =
+    req.body;
 
     try {
         const product = await prisma.stock.findUnique({
@@ -166,7 +182,7 @@ app.put("/products/estoque/:id", async (req, res) => {
                 status: status,
                 purchase_price: purchase_price,
                 expiry_date: new Date(expiry_date),
-                update_at: new Date(update_at),
+                updated_at: new Date(updated_at),
                 quantity: quantity,
             },
         });

@@ -90,7 +90,7 @@ model Stock {
   purchase_price Decimal?  @db.Decimal(10, 2)
   expiry_date    DateTime? @db.Date
   created_at     DateTime? @db.Timestamp(6)
-  update_at      DateTime? @db.Timestamp(6)
+  updated_at      DateTime? @db.Timestamp(6)
   quantity       Int?
   products       Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
 
