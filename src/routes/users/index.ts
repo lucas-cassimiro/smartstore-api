@@ -1,9 +1,8 @@
-import  express  from "express";
-const userRoutes = express.Router()
+import express from "express";
+const userRoutes = express.Router();
 
+userRoutes.get("/users", (req, res) => {
+    res.send("pagina users");
+});
 
-userRoutes.get('/users', (req,res)=>{
-    res.send('pagina users')
-})
-
-export default userRoutes
+export default userRoutes;

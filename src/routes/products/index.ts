@@ -1,5 +1,5 @@
-import  express  from "express";
-const router = express.Router()
+import express from "express";
+const router = express.Router();
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 // listagem de todos os produtos -- TABELA PRODUCTS
@@ -190,4 +190,4 @@ router.put("/estoque/:id", async (req, res) => {
     }
 });
 
-export default router
+export default router;

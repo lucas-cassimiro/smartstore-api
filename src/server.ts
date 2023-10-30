@@ -1,5 +1,6 @@
 import express from "express";
-import allRoutes from "./routes/index"
+import routerProducts from "./routes/products";
+import routerUser from "./routes/users";
 
 const port = 3001;
 const app = express();
@@ -13,9 +14,10 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(allRoutes)
-
 app.use(express.json());
+
+app.use("/products", routerProducts);
+app.use("/users", routerUser);
 
 app.listen(port, () => {
     console.log(`Servidor em execucação na porta ${port}`);
