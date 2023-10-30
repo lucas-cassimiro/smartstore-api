@@ -1,6 +1,7 @@
 import express from "express";
 import routerProducts from "./routes/products";
 import routerUser from "./routes/users";
+import routerStock from "./routes/stock";
 
 const port = 3001;
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use("/products", routerProducts);
 app.use("/users", routerUser);
+app.use("/stock", routerStock);
 
 app.listen(port, () => {
     console.log(`Servidor em execucação na porta ${port}`);
