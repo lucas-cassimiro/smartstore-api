@@ -176,6 +176,27 @@ router.post("/", async (req, res) => {
     res.status(201).send();
 });
 
+router.delete("/:id", async (req, res) => {
+    const id = Number(req.params.id);
+    try {
+        const productExistent = await prisma.product.findUnique({ where: { id } });
+        if (!productExistent) {
+            return res
+                .status(400)
+                .send({ message: "Produto não consta na base de dados " });
+        }
+        const product_id = productExistent.id;
+        await prisma.stock.deleteMany({ where: { product_id } });
+        await prisma.product.delete({ where: { id: product_id } });
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(500)
+            .send({ message: "Não foi possível remover o produto" });
+    }
+    res.status(200).end();
+});
+
 // router.put("/:id", async (req, res) => {
 //     const id = Number(req.params.id);
 
