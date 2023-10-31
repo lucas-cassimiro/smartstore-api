@@ -108,6 +108,7 @@ model Storage {
 
 model User {
   id            Int       @id @default(autoincrement())
+  admin_auth    Boolean? 
   email         String    @db.VarChar(255)
   password_hash String    @db.VarChar(255)
   cpf           String?   @db.VarChar(14)
