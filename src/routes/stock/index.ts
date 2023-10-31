@@ -1,10 +1,9 @@
-import express from "express"
+import express from "express";
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const router = express.Router()
-
+const router = express.Router();
 
 router.get("/", async (_, res) => {
     const products = await prisma.stock.findMany({
@@ -64,4 +63,4 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-export default router
+export default router;

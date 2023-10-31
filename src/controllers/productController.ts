@@ -1,5 +1,5 @@
-const productController = {
-    index : (req:any,res:any) => {
+// const productController = {
+//     index : (req:any,res:any) => {
 
-    }
-}
+//     }
+// }

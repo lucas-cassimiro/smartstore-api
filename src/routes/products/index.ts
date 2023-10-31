@@ -1,7 +1,9 @@
 import express from "express";
-const router = express.Router();
 import { PrismaClient } from "@prisma/client";
+
+const router = express.Router();
 const prisma = new PrismaClient();
+
 // listagem de todos os produtos -- TABELA PRODUCTS
 
 router.get("/", async (_, res) => {
@@ -90,45 +92,129 @@ router.post("/", async (req, res) => {
         color_id,
         storage_id,
         categorie_id,
+        quantity,
+        ean,
+        status,
+        purchase_price,
+        expiry_date,
     } = req.body;
 
     try {
-        const productWidthSameName = await prisma.product.findFirst({
+        const productWidthSameEAN = await prisma.product.findFirst({
             where: {
-                name: {
-                    equals: name,
-                    mode: "insensitive",
+                ean: {
+                    equals: ean,
                 },
             },
         });
 
-        if (productWidthSameName) {
-            return res
-                .status(409)
-                .send({ message: "Já existe um produto cadastrado com esse nome" });
-        }
+        if (productWidthSameEAN) {
+            console.log(productWidthSameEAN);
 
-        await prisma.product.create({
-            data: {
-                name: name,
-                price: price,
-                image: image,
-                black_friday: black_friday,
-                discount: discount,
-                average_score: average_score,
-                description: description,
-                created_at: new Date(created_at),
-                color_id: color_id,
-                storage_id: storage_id,
-                categorie_id: categorie_id,
-            },
-        });
+            // return res
+            //     .status(409)
+            //     .send({ message: "Já existe um produto cadastrado com esse nome" });
+
+            const existentInStock = await prisma.stock.findMany({
+                where: {
+                    product_id: productWidthSameEAN.id,
+                },
+            });
+
+            console.log("olá", existentInStock);
+
+            await prisma.stock.update({
+                where: {
+                    id: existentInStock[0].id,
+                },
+                data: {
+                    quantity: existentInStock[0].quantity + quantity,
+                },
+            });
+
+            res.send("Quantidade atualizada");
+        } else {
+            await prisma.product.create({
+                data: {
+                    name: name,
+                    price: price,
+                    image: image,
+                    black_friday: black_friday,
+                    discount: discount,
+                    average_score: average_score,
+                    description: description,
+                    created_at: new Date(created_at),
+                    color_id: color_id,
+                    storage_id: storage_id,
+                    categorie_id: categorie_id,
+                    ean: ean,
+                },
+            });
+
+            const batata = await prisma.product.findFirst({
+                where: {
+                    ean: {
+                        equals: ean,
+                    },
+                },
+            });
+
+            console.log("battinha frita", batata);
+
+            await prisma.stock.create({
+                data: {
+                    product_id: batata?.id,
+                    status: status,
+                    purchase_price: purchase_price,
+                    expiry_date: new Date(expiry_date),
+                    created_at: new Date(created_at),
+                    quantity: quantity,
+                },
+            });
+            res.send("Produto cadastrado");
+        }
     } catch (error) {
+        console.log(error);
         return res.status(500).send({ message: "Falha ao cadastrar um produto " });
     }
 
     res.status(201).send();
 });
+
+router.delete("/:id", async (req, res) => {
+    const id = Number(req.params.id);
+
+    try {
+        const productExistent = await prisma.product.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!productExistent) {
+            return res
+                .status(400)
+                .send({ message: "Produto não existe na base de dados " });
+        }
+
+        await prisma.product.delete({
+            where: {
+                id,
+            },
+        });
+    } catch (error) {
+        return res
+            .status(500)
+            .send({ message: "Não foi possível remover o produto" });
+    }
+
+    res.status(200).end();
+});
+
+// router.put("/:id", async (req, res) => {
+//     const id = Number(req.params.id);
+
+// })
 
 // rota para lista dos produtos em estoque  --> no front-end fazer tratamento para mostrar os detalhes dos produtos
 
