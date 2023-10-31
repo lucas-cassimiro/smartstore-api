@@ -1,5 +1,6 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
+import findByEAN from './../../utils/productUtils'
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -93,35 +94,23 @@ router.post("/", async (req, res) => {
         storage_id,
         categorie_id,
         quantity,
-        ean,
         status,
         purchase_price,
         expiry_date,
+        ean,
     } = req.body;
 
     try {
-        const productWidthSameEAN = await prisma.product.findFirst({
-            where: {
-                ean: {
-                    equals: ean,
-                },
-            },
-        });
 
-        if (productWidthSameEAN) {
-            console.log(productWidthSameEAN);
+        const productWithSameEAN = await findByEAN(ean)
 
-            // return res
-            //     .status(409)
-            //     .send({ message: "Já existe um produto cadastrado com esse nome" });
+        if (productWithSameEAN) {
 
             const existentInStock = await prisma.stock.findMany({
                 where: {
-                    product_id: productWidthSameEAN.id,
+                    product_id: productWithSameEAN.id,
                 },
             });
-
-            console.log("olá", existentInStock);
 
             await prisma.stock.update({
                 where: {
@@ -132,46 +121,39 @@ router.post("/", async (req, res) => {
                 },
             });
 
-            res.send("Quantidade atualizada");
+            return res.status(200).send({
+                message: "Produto já existente na base de dados. Quantidade atualizada.",
+            });
         } else {
+
             await prisma.product.create({
                 data: {
-                    name: name,
-                    price: price,
-                    image: image,
-                    black_friday: black_friday,
-                    discount: discount,
-                    average_score: average_score,
-                    description: description,
-                    created_at: new Date(created_at),
-                    color_id: color_id,
-                    storage_id: storage_id,
-                    categorie_id: categorie_id,
-                    ean: ean,
+                    name,
+                    price,
+                    image,
+                    black_friday,
+                    discount,
+                    average_score,
+                    description,
+                    color_id,
+                    storage_id,
+                    categorie_id,
+                    ean,
                 },
             });
 
-            const batata = await prisma.product.findFirst({
-                where: {
-                    ean: {
-                        equals: ean,
-                    },
-                },
-            });
-
-            console.log("battinha frita", batata);
-
+            const findProductByStock = await findByEAN(ean)
             await prisma.stock.create({
                 data: {
-                    product_id: batata?.id,
-                    status: status,
-                    purchase_price: purchase_price,
+                    product_id: findProductByStock?.id,
+                    status,
+                    purchase_price,
                     expiry_date: new Date(expiry_date),
                     created_at: new Date(created_at),
-                    quantity: quantity,
+                    quantity,
                 },
             });
-            res.send("Produto cadastrado");
+            res.status(201).send({ message: "Produto cadastrado" });
         }
     } catch (error) {
         console.log(error);
