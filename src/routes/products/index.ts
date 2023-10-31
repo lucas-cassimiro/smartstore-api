@@ -1,6 +1,6 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
-import findByEAN from './../../utils/productUtils'
+import findByEAN from "./../../utils/productUtils";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -101,11 +101,9 @@ router.post("/", async (req, res) => {
     } = req.body;
 
     try {
-
-        const productWithSameEAN = await findByEAN(ean)
+        const productWithSameEAN = await findByEAN(ean);
 
         if (productWithSameEAN) {
-
             const existentInStock = await prisma.stock.findMany({
                 where: {
                     product_id: productWithSameEAN.id,
@@ -118,14 +116,16 @@ router.post("/", async (req, res) => {
                 },
                 data: {
                     quantity: existentInStock[0].quantity + quantity,
+                    purchase_price,
+                    updated_at: new Date(created_at)
                 },
             });
 
             return res.status(200).send({
-                message: "Produto já existente na base de dados. Quantidade atualizada.",
+                message:
+          "Produto já existente na base de dados. Quantidade atualizada.",
             });
         } else {
-
             await prisma.product.create({
                 data: {
                     name,
@@ -142,7 +142,8 @@ router.post("/", async (req, res) => {
                 },
             });
 
-            const findProductByStock = await findByEAN(ean)
+            const findProductByStock = await findByEAN(ean);
+
             await prisma.stock.create({
                 data: {
                     product_id: findProductByStock?.id,
@@ -150,14 +151,14 @@ router.post("/", async (req, res) => {
                     purchase_price,
                     expiry_date: new Date(expiry_date),
                     created_at: new Date(created_at),
+                    updated_at: new Date(created_at),
                     quantity,
                 },
             });
-            res.status(201).send({ message: "Produto cadastrado" });
+            res.status(201).send({ message: "Novo produto cadastrado" });
         }
     } catch (error) {
-        console.log(error);
-        return res.status(500).send({ message: "Falha ao cadastrar um produto " });
+        return res.status(500).send({ message: "Falha ao cadastrar produto" });
     }
 
     res.status(201).send();
