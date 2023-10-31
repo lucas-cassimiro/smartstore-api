@@ -117,7 +117,7 @@ router.post("/", async (req, res) => {
                 data: {
                     quantity: existentInStock[0].quantity + quantity,
                     purchase_price,
-                    updated_at: new Date(created_at)
+                    updated_at: new Date(created_at),
                 },
             });
 
@@ -126,72 +126,54 @@ router.post("/", async (req, res) => {
           "Produto já existente na base de dados. Quantidade atualizada.",
             });
         } else {
-            await prisma.product.create({
-                data: {
-                    name,
-                    price,
-                    image,
-                    black_friday,
-                    discount,
-                    average_score,
-                    description,
-                    color_id,
-                    storage_id,
-                    categorie_id,
-                    ean,
-                },
-            });
+            const createdProductandStock = await prisma.$transaction(
+                async (prisma) => {
+                    const createdProduct = await prisma.product.create({
+                        data: {
+                            name,
+                            price,
+                            image,
+                            black_friday,
+                            discount,
+                            average_score,
+                            description,
+                            color_id,
+                            storage_id,
+                            categorie_id,
+                            ean,
+                        },
+                    });
 
-            const findProductByStock = await findByEAN(ean);
+                    const product_id = createdProduct.id;
+                    const createdStock = await prisma.stock.create({
+                        data: {
+                            product_id,
+                            status,
+                            purchase_price,
+                            expiry_date: new Date(expiry_date),
+                            created_at: new Date(created_at),
+                            updated_at: new Date(created_at),
+                            quantity,
+                        },
+                    });
 
-            await prisma.stock.create({
-                data: {
-                    product_id: findProductByStock?.id,
-                    status,
-                    purchase_price,
-                    expiry_date: new Date(expiry_date),
-                    created_at: new Date(created_at),
-                    updated_at: new Date(created_at),
-                    quantity,
-                },
-            });
-            res.status(201).send({ message: "Novo produto cadastrado" });
+                    return { createdProduct, createdStock };
+                }
+            );
+
+            if (createdProductandStock) {
+                res.status(201).send({ message: "Novo produto cadastrado" });
+            } else {
+                res
+                    .status(500)
+                    .send({ error: "Falha ao criar o produto ou o estoque" });
+            }
         }
     } catch (error) {
         return res.status(500).send({ message: "Falha ao cadastrar produto" });
     }
 
     res.status(201).send();
-});
-
-router.delete("/:id", async (req, res) => {
-    const id = Number(req.params.id);
-
-    try {
-        const productExistent = await prisma.product.findUnique({
-            where: {
-                id,
-            },
-        });
-
-        if (!productExistent) {
-            return res
-                .status(400)
-                .send({ message: "Produto não existe na base de dados " });
-        }
-
-        await prisma.product.delete({
-            where: {
-                id,
-            },
-        });
-    } catch (error) {
-        return res
-            .status(500)
-            .send({ message: "Não foi possível remover o produto" });
-    }
-
-    res.status(200).end();
 });
 
 // router.put("/:id", async (req, res) => {

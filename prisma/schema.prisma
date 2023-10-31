@@ -60,7 +60,7 @@ model Product {
   color_id      Int?
   storage_id    Int?
   categorie_id  Int?
-  ean           String?      @db.VarChar(13)
+  ean           String?       @db.VarChar(13)
   order_items   Order_item[]
   categories    Categorie?   @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categorie")
   colors        Color?       @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_color")
@@ -107,7 +107,6 @@ model Storage {
 
 model User {
   id            Int       @id @default(autoincrement())
-  admin_auth    Boolean? 
   email         String    @db.VarChar(255)
   password_hash String    @db.VarChar(255)
   cpf           String?   @db.VarChar(14)
@@ -117,6 +116,7 @@ model User {
   date_birth    DateTime? @db.Date
   created_at    DateTime? @default(now()) @db.Timestamp(6)
   last_login    DateTime? @db.Timestamp(6)
+  admin_auth    Boolean?
   orders        Order[]
   ratings       Rating[]
 
