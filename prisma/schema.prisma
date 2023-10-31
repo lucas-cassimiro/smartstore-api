@@ -57,7 +57,6 @@ model Product {
   discount      Decimal?      @db.Decimal(5, 2)
   average_score Decimal?      @db.Decimal(3, 2)
   description   String?
-  created_at    DateTime?     @db.Timestamp(6)
   color_id      Int?
   storage_id    Int?
   categorie_id  Int?
