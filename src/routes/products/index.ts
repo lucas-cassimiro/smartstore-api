@@ -179,15 +179,42 @@ router.post("/", async (req, res) => {
 router.delete("/:id", async (req, res) => {
     const id = Number(req.params.id);
     try {
-        const productExistent = await prisma.product.findUnique({ where: { id } });
+        const productExistent = await prisma.product.findUnique({
+            where: {
+                id,
+            },
+        });
+
         if (!productExistent) {
             return res
                 .status(400)
                 .send({ message: "Produto não consta na base de dados " });
         }
+
         const product_id = productExistent.id;
-        await prisma.stock.deleteMany({ where: { product_id } });
-        await prisma.product.delete({ where: { id: product_id } });
+
+        const deleteProductInStock = prisma.stock.deleteMany({
+            where: {
+                product_id,
+            },
+        });
+
+        const deleteProductInProduct = prisma.product.delete({
+            where: {
+                id: product_id,
+            },
+        });
+
+        const deletedFromStockAndProduct = await prisma.$transaction([
+            deleteProductInStock,
+            deleteProductInProduct,
+        ]);
+
+        if (deletedFromStockAndProduct) {
+            return res.status(200).send({ message: "Produto deletado com sucesso" });
+        } else {
+            return res.status(404).send({ message: "Falha ao deletar produto" });
+        }
     } catch (error) {
         console.log(error);
         return res
@@ -200,7 +227,9 @@ router.delete("/:id", async (req, res) => {
 // router.put("/:id", async (req, res) => {
 //     const id = Number(req.params.id);
 
-// })
+
+
+// });
 
 // rota para lista dos produtos em estoque  --> no front-end fazer tratamento para mostrar os detalhes dos produtos
 
