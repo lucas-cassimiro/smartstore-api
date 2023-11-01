@@ -1,8 +1,48 @@
 import express from "express";
+import bcrypt from 'bcrypt';
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 const userRoutes = express.Router();
 
-userRoutes.get("/users", (req, res) => {
-    res.send("pagina users");
+userRoutes.get("/", async (req, res) => {
+    const allUsers = await prisma.user.findMany({})
+    res.json({allUsers})
 });
+
+userRoutes.post('/', async(req,res)=>{
+    try {
+        let user = await prisma.user.findFirst({
+            where: {
+              email: req.body.email,
+            },
+          })
+    
+          if(!user){
+
+              
+            const newUser = {
+                  ...req.body,
+                  admin_auth: Boolean(true),
+                  created_at: new Date()
+                }
+                
+            const hash = bcrypt.hashSync(newUser.password_hash, 2)
+
+            newUser.password_hash = hash
+
+              await prisma.user.create({
+                  data: newUser
+              })
+                
+              res.send('Objeto criado com sucesso!')
+          } else {
+            res.send('usuário já existe')
+          }
+
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 export default userRoutes;
