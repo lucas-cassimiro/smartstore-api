@@ -1,48 +1,13 @@
-import express from "express";
-import bcrypt from 'bcrypt';
-import { PrismaClient } from "@prisma/client";
+import UserController from "../../controllers/UserController";
+import express from 'express'
+import upload from "../../middleware/upload";
 
-const prisma = new PrismaClient();
-const userRoutes = express.Router();
+const userRoutes = express.Router()
 
-userRoutes.get("/", async (req, res) => {
-    const allUsers = await prisma.user.findMany({})
-    res.json({allUsers})
-});
+userRoutes.get("/", UserController.index);
 
-userRoutes.post('/', async(req,res)=>{
-    try {
-        let user = await prisma.user.findFirst({
-            where: {
-              email: req.body.email,
-            },
-          })
-    
-          if(!user){
+userRoutes.post('/', UserController.create)
 
-              
-            const newUser = {
-                  ...req.body,
-                  admin_auth: Boolean(true),
-                  created_at: new Date()
-                }
-                
-            const hash = bcrypt.hashSync(newUser.password_hash, 2)
-
-            newUser.password_hash = hash
-
-              await prisma.user.create({
-                  data: newUser
-              })
-                
-              res.send('Objeto criado com sucesso!')
-          } else {
-            res.send('usuário já existe')
-          }
-
-    } catch (error) {
-        console.log(error)
-    }
-})
+userRoutes.put('/:id', upload.any(), UserController.edit)
 
 export default userRoutes;
