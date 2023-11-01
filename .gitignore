@@ -1,2 +1,4 @@
 /node_modules
 .env
+/public/upload/images/products/*
+/public/upload/images/user/*
