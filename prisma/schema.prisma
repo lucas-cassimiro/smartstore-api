@@ -121,5 +121,6 @@ model User {
   orders        Order[]
   ratings       Rating[]
 
+  @@unique(fields: [email])
   @@map("users")
 }
