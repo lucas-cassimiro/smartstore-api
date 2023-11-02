@@ -12,11 +12,29 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
     const { name } = req.body;
 
-    await prisma.categorie.create({
-        data: {
-            name,
-        },
-    });
+    try {
+        const categorieExistentInDatabase = await prisma.categorie.findFirst({
+            where: {
+                name
+            },
+        });
+
+        if (categorieExistentInDatabase) {
+            return res
+                .status(404)
+                .send({ message: "Categoria de produtos já existe na base de dados" });
+        }
+
+        await prisma.categorie.create({
+            data: {
+                name,
+            },
+        });
+    } catch (error) {
+        return res
+            .status(404)
+            .send({ message: "Erro ao cadastrar nova categoria de produtos" });
+    }
 
     res.status(200).send({
         message: "Nova categoria de produtos cadastrada na base de dados",
@@ -25,29 +43,34 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     const id = Number(req.params.id);
-
     const { name } = req.body;
 
-    const categorieExistentInDatabase = await prisma.categorie.findUnique({
-        where: {
-            id,
-        },
-    });
+    try {
+        const categorieExistentInDatabase = await prisma.categorie.findUnique({
+            where: {
+                id,
+            },
+        });
 
-    if (!categorieExistentInDatabase) {
+        if (!categorieExistentInDatabase) {
+            return res
+                .status(400)
+                .send({ message: "Categoria de produto não consta na base de dados " });
+        }
+
+        await prisma.categorie.update({
+            where: {
+                id,
+            },
+            data: {
+                name,
+            },
+        });
+    } catch (error) {
         return res
-            .status(400)
-            .send({ message: "Categoria de produto não consta na base de dados " });
+            .status(404)
+            .send({ message: "Falha ao cadastrar nova categoria na base de dados" });
     }
-
-    await prisma.categorie.update({
-        where: {
-            id,
-        },
-        data: {
-            name,
-        },
-    });
 
     res
         .status(200)

@@ -8,28 +8,28 @@ datasource db {
 }
 
 model Categorie {
-  id       Int        @id @default(autoincrement())
-  name     String?    @db.VarChar(50)
+  id       Int       @id @default(autoincrement())
+  name     String?   @db.VarChar(50)
   products Product[]
 
   @@map("categories")
 }
 
 model Color {
-  id       Int        @id @default(autoincrement())
-  name     String?    @db.VarChar(50)
+  id       Int       @id @default(autoincrement())
+  name     String?   @db.VarChar(50)
   products Product[]
 
   @@map("colors")
 }
 
 model Order_item {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   order_id    Int?
   product_id  Int?
-  unit_price  Decimal?  @db.Decimal(10, 2)
-  discount    Decimal?  @db.Decimal(5, 2)
-  total_price Decimal?  @db.Decimal(10, 2)
+  unit_price  Decimal? @db.Decimal(10, 2)
+  discount    Decimal? @db.Decimal(5, 2)
+  total_price Decimal? @db.Decimal(10, 2)
   quantity    Int?
   orders      Order?   @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order")
   products    Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
@@ -38,10 +38,10 @@ model Order_item {
 }
 
 model Order {
-  id           Int           @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   user_id      Int?
-  order_date   DateTime?     @db.Timestamp(6)
-  total_amount Decimal?      @db.Decimal(10, 2)
+  order_date   DateTime?    @db.Timestamp(6)
+  total_amount Decimal?     @db.Decimal(10, 2)
   order_items  Order_item[]
   users        User?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
 
@@ -49,18 +49,18 @@ model Order {
 }
 
 model Product {
-  id            Int           @id @default(autoincrement())
-  name          String?       @db.VarChar(100)
-  price         Decimal?      @db.Decimal(10, 2)
+  id            Int          @id @default(autoincrement())
+  name          String?      @db.VarChar(100)
+  price         Decimal?     @db.Decimal(10, 2)
   image         String?
   black_friday  Boolean?
-  discount      Decimal?      @db.Decimal(5, 2)
-  average_score Decimal?      @db.Decimal(3, 2)
+  discount      Decimal?     @db.Decimal(5, 2)
+  average_score Decimal?     @db.Decimal(3, 2)
   description   String?
   color_id      Int?
   storage_id    Int?
   categorie_id  Int?
-  ean           String?       @db.VarChar(13)
+  ean           String?      @db.VarChar(13)
   order_items   Order_item[]
   categories    Categorie?   @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categorie")
   colors        Color?       @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_color")
@@ -72,10 +72,10 @@ model Product {
 }
 
 model Rating {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   user_id    Int?
   product_id Int?
-  score      Decimal?  @db.Decimal(3, 2)
+  score      Decimal? @db.Decimal(3, 2)
   quantity   Int?
   products   Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
   users      User?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
@@ -92,16 +92,17 @@ model Stock {
   created_at     DateTime? @db.Timestamp(6)
   updated_at     DateTime? @db.Timestamp(6)
   quantity       Int?
-  products       Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
+  products       Product?  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
 
   @@map("stocks")
 }
 
 model Storage {
-  id       Int        @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   capacity Int?
   products Product[]
 
+  @@unique(fields: [capacity])
   @@map("storages")
 }
 
