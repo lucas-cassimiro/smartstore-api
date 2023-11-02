@@ -224,12 +224,58 @@ router.delete("/:id", async (req, res) => {
     res.status(200).end();
 });
 
-// router.put("/:id", async (req, res) => {
-//     const id = Number(req.params.id);
+router.put("/:id", async (req, res) => {
+    const id = Number(req.params.id);
 
+    const {
+        name,
+        price,
+        image,
+        black_friday,
+        discount,
+        description,
+        color_id,
+        storage_id,
+        categorie_id,
+        ean,
+    } = req.body;
 
+    const productExistentInDatabase = await prisma.product.findUnique({
+        where: {
+            id,
+        },
+    });
 
-// });
+    if (!productExistentInDatabase) {
+        return res
+            .status(404)
+            .send({ message: "Produto não existe na base de dados" });
+    }
+
+    try {
+        await prisma.product.update({
+            where: {
+                id,
+            },
+            data: {
+                name,
+                price,
+                image,
+                black_friday,
+                discount,
+                description,
+                color_id,
+                storage_id,
+                categorie_id,
+                ean,
+            },
+        });
+    } catch (error) {
+        return res.status(404).send({ message: "Erro ao atualizar produto" });
+    }
+
+    res.status(200).send({ message: "Produto alterado na base de dados " });
+});
 
 // rota para lista dos produtos em estoque  --> no front-end fazer tratamento para mostrar os detalhes dos produtos
 
