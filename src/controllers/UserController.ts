@@ -6,6 +6,7 @@ import './../utils/userUtils'
 const prisma = new PrismaClient();
 
 import { Request, Response } from "express";
+import findExistentUser from "./../utils/userUtils";
 
 type userProps = {
     id: number
@@ -31,11 +32,7 @@ const UserController = {
 
             const {email} = req.body as userProps
 
-            const user = await prisma.user.findFirst({
-                where: {
-                    email,
-                },
-            });
+            const user = await findExistentUser(email)
 
             if (user) {
                 return res.status(404).send("usuário já existe");
@@ -87,7 +84,7 @@ const UserController = {
                 }
             })
     
-            console.log(updateUser)
+            return res.status(201).send({message: 'Usuário atualizado '})
     
         }
         
