@@ -1,23 +1,34 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+// type findExistentUserProps = {
+//   keySearch: string | number;
+// };
 
+export default async function findExistentUser(keySearch: string | number) {
+    // const key = keySearch;
 
-export default async function findExistentUser(keySearch:any){
+    // const keyUser = Number(key);
 
-    if(isNaN(keySearch)){
-        return await prisma.user.findFirst({
-                where: {
-                    email:{
-                        equals: keySearch
-                    }
-                },
-            })
-    }else{
-        return await prisma.user.findFirst({
-            where:{
-                id: Number(keySearch)
-            }
-        })
-    } 
+    // if (!isNaN(keyUser)) {
+    //     const id = Number(key);
+
+    //     const user = await prisma.user.findUnique({
+    //         where: {
+    //             id,
+    //         },
+    //     });
+
+    //     if (user) {
+    //         return "Usuário não existe na base de dados!";
+    //     }
+    // }else {
+    //     await prisma.user.findUnique({
+    //         where: {
+    //             email: {
+    //                 equals: key
+    //             }
+    //         }
+    //     });
+    // }
 }

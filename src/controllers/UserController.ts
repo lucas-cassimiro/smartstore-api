@@ -30,7 +30,7 @@ const UserController = {
         try {
             const { email } = req.body as userProps;
 
-            const user = await findExistentUser(email)
+            const user = await findExistentUser(email);
 
             if (user) {
                 return res.status(404).send("usuário já existe");
@@ -73,13 +73,12 @@ const UserController = {
                 where: {
                     id,
                 },
-                data:{
-                    ...req.body
-                }
-            })
-    
-            console.log(updateUser)
-    
+                data: {
+                    ...req.body,
+                },
+            });
+
+            console.log(updateUser);
         }
     },
 };

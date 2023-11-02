@@ -4,6 +4,7 @@ import routerUser from "./routes/users";
 import routerStock from "./routes/stock";
 import routerColors from "./routes/colors";
 import routerStorages from "./routes/storages";
+import routerOrders from "./routes/orders";
 
 const port = 3001;
 const app = express();
@@ -25,7 +26,7 @@ app.use("/stock", routerStock);
 app.use("/colors", routerColors);
 app.use("/storages", routerStorages);
 // app.use("/categories", routerCategories);
-// app.use("/orders", routerOrders);
+app.use("/orders", routerOrders);
 // app.use("/order_items", routerOrderItems);
 // app.use("/ratings", routerRatigns);
 
