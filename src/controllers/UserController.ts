@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
-import { PrismaClient } from "@prisma/client";
-
-import "./../utils/userUtils";
-
-const prisma = new PrismaClient();
+import "../utils/userUtils";
 
 import { Request, Response } from "express";
-import findExistentUser from "./../utils/userUtils";
+import findExistentUser from "../utils/userUtils";
+
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
+
 
 type userProps = {
   email: string;
@@ -19,7 +19,7 @@ type userProps = {
   date_birth: string;
 };
 
-const UserController = {
+const userController = {
     index: async (req: Request, res: Response) => {
         const allUsers = await prisma.user.findMany({});
         res.json({ allUsers });
@@ -52,73 +52,66 @@ const UserController = {
                 return res.status(201).send("Usuário criado com sucesso!");
             }
         } catch (error) {
-            return res.status(500).send({message: "Erro ao cadastrar usuário"})
+            return res.status(500).send({ message: "Erro ao cadastrar usuário" });
         }
     },
 
     edit: async (req: Request, res: Response) => {
-
         try {
-
             const id = Number(req.params.id);
 
-        const existentUser = await prisma.user.findUnique({
-            where: {
-                id,
-            },
-        });
-
-        if (!existentUser) {
-            return res.status(404).send({ message: "Usuário não existente!" });
-        } else {
-            const updateUser = await prisma.user.update({
+            const existentUser = await prisma.user.findUnique({
                 where: {
                     id,
                 },
-                data: {
-                    ...req.body,
+            });
+
+            if (!existentUser) {
+                return res.status(404).send({ message: "Usuário não existente!" });
+            } else {
+                await prisma.user.update({
+                    where: {
+                        id,
+                    },
+                    data: {
+                        ...req.body,
+                    },
+                });
+
+                return res.status(201).send({ message: "Usuário existente." });
+            }
+        } catch (error) {
+            return res.status(500).send({ message: "Erro ao editar usuário." });
+        }
+    },
+
+    login: async (req: Request, res: Response) => {
+        try {
+            const { email, password } = req.body;
+
+            const user = await prisma.user.findUnique({
+                where: {
+                    email,
                 },
             });
 
-            return res.status(201).send({message: "Usuário existente."})
-        }
-            
-        } catch (error) {
-            return res.status(500).send({message: "Erro ao editar usuário."})
-            
-        }
+            if (user && bcrypt.compareSync(password, user.password_hash)) {
+                const token = jsonwebtoken.sign(
+                    {
+                        exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                        data: { id: user.id, email: user.email, admin: user.admin_auth },
+                    },
+                    "segredo123"
+                );
 
-        
-    },
-
-    login: async(req:Request, res:Response)=>{
-
-        try {
-            const {email, password} = req.body
-
-            let user = await prisma.user.findUnique({
-                where:{
-                    email
-                }
-            })
-    
-            if(user && bcrypt.compareSync(password, user.password_hash)){
-
-                const token = jsonwebtoken.sign({
-                    exp: Math.floor(Date.now() / 1000) + (60 * 60),
-                    data:{id: user.id, email: user.email, admin: user.admin_auth}
-                }, 'segredo123')
-                
-                return res.status(200).json({token})
-
+                return res.status(200).json({ token });
             } else {
-                return res.status(500).json({error: "Usuário ou senha incorretos."})
+                return res.status(500).json({ error: "Usuário ou senha incorretos." });
             }
         } catch (error) {
-            return res.status(500).send({message: "Erro ao fazer login."})
+            return res.status(500).send({ message: "Erro ao fazer login." });
         }
-
-    }
+    },
 };
 
-export default UserController;
+export default userController;
