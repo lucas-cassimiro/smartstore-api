@@ -1,7 +1,7 @@
 import userController from "../../controllers/UserController";
 import express from "express";
 import upload from "../../middleware/upload";
-import auth from "./../../middleware/auth";
+//import auth from "./../../middleware/auth";
 
 const userRoutes = express.Router();
 
