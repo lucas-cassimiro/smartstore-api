@@ -88,7 +88,7 @@ const userController = {
             const findUser = await findExistentUser(email);
 
             if(findUser){
-                let user = await prisma.user.findUnique({
+                const user = await prisma.user.findUnique({
                     where: {
                         email,
                     },
