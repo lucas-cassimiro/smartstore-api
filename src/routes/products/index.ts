@@ -216,7 +216,6 @@ router.delete("/:id", async (req, res) => {
             return res.status(404).send({ message: "Falha ao deletar produto" });
         }
     } catch (error) {
-        console.log(error);
         return res
             .status(500)
             .send({ message: "Não foi possível remover o produto" });
