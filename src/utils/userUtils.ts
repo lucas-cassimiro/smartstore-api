@@ -6,19 +6,31 @@ const prisma = new PrismaClient();
 
 export default async function findExistentUser(keySearch:any){
 
-    if(isNaN(keySearch)){
-        return await prisma.user.findFirst({
+    const valueType = typeof keySearch == 'string'
+
+    if(valueType){
+        let identify = identifyEmail(keySearch);
+
+        if(identify){
+
+            return await prisma.user.findFirst({
                 where: {
                     email:{
                         equals: keySearch
                     }
                 },
             })
+        } 
     } else {
+
         return await prisma.user.findFirst({
             where:{
                 id: Number(keySearch)
             }
         })
-    } 
+        
+    }
+
+    
+
 }

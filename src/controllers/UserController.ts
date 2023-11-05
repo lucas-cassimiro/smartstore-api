@@ -62,11 +62,7 @@ const UserController = {
 
             const id = Number(req.params.id);
 
-        const existentUser = await prisma.user.findUnique({
-            where: {
-                id,
-            },
-        });
+            const existentUser = await findExistentUser(id)
 
         if (!existentUser) {
             return res.status(404).send({ message: "Usuário não existente!" });
@@ -84,6 +80,7 @@ const UserController = {
         }
             
         } catch (error) {
+            console.log(error)
             return res.status(500).send({message: "Erro ao editar usuário."})
             
         }
