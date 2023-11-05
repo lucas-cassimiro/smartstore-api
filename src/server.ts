@@ -5,6 +5,8 @@ import routerStock from "./routes/stock";
 import routerColors from "./routes/colors";
 import routerStorages from "./routes/storages";
 import routerOrders from "./routes/orders";
+import routerRatings from "./routes/ratings";
+import routerCategories from "./routes/categories";
 
 const port = 3001;
 const app = express();
@@ -25,10 +27,10 @@ app.use("/users", routerUser);
 app.use("/stock", routerStock);
 app.use("/colors", routerColors);
 app.use("/storages", routerStorages);
-// app.use("/categories", routerCategories);
+app.use("/categories", routerCategories);
 app.use("/orders", routerOrders);
+app.use("/ratings", routerRatings);
 // app.use("/order_items", routerOrderItems);
-// app.use("/ratings", routerRatigns);
 
 app.listen(port, () => {
     console.log(`Servidor em execucação na porta ${port}`);

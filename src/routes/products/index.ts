@@ -162,9 +162,9 @@ router.post("/", async (req, res) => {
             );
 
             if (createdProductandStock) {
-                res.status(201).send({ message: "Novo produto cadastrado" });
+                return res.status(201).send({ message: "Novo produto cadastrado" });
             } else {
-                res
+                return res
                     .status(500)
                     .send({ error: "Falha ao criar o produto ou o estoque" });
             }

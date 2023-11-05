@@ -3,8 +3,6 @@ import { PrismaClient } from "@prisma/client";
 
 import { Request, Response } from "express";
 
-import currencyFormat from "../../utils/currencyFormatUtils";
-
 const router = express.Router();
 const prisma = new PrismaClient();
 
@@ -21,42 +19,84 @@ router.get("/", async (req: Request, res: Response) => {
 router.post("/", async (req: Request, res: Response) => {
     const { user_id, user_order } = req.body;
 
-    const products: any[] = [];
+    let totalAmount = 0;
+    const productIds: number[] = [];
 
     for (const element of user_order) {
-        const produtinho = await prisma.product.findFirst({
+        const produtinho = await prisma.product.findUnique({
             where: {
                 id: element.product_id,
             },
         });
 
-        const calcTotalAmount =
-      ((Number(produtinho?.price) * (100 - Number(produtinho?.discount))) /
-        100) *
-      Number(element.quantity);
+        if (produtinho) {
+            const unitPrice = Number(produtinho.price);
+            const discount = Number(produtinho.discount);
+            const quantity = Number(element.quantity);
 
-        products.push({
-            user_id: user_id,
-            order_date: new Date(),
-            total_amount: calcTotalAmount.toFixed(2),
-        });
+            const totalValue = ((unitPrice * (100 - discount)) / 100) * quantity;
+
+            totalAmount += totalValue;
+            productIds.push(element.product_id);
+        }
     }
 
-    const peidei = await prisma.order.createMany({
-        data: products,
-    });
+    const createdOrderAndOrderItems = await prisma.$transaction(
+        async (prisma) => {
+            const createdItemInOrder = await prisma.order.create({
+                data: {
+                    user_id: user_id,
+                    order_date: new Date(),
+                    total_amount: totalAmount,
+                },
+            });
 
-    console.log(peidei.count);
+            const orderId = createdItemInOrder.id;
 
-    /*  
-        product_id,
-        unit_price === valor TOTAL  DA COMPRA
-        discount === desconto TOTAL DA COMPRA
-        total_price 
+            const createdItemsInOrderItems = await Promise.all(
+                user_order.map(
+                    async (orderItem: { product_id: number; quantity: number }) => {
+                        const produtinho = await prisma.product.findUnique({
+                            where: {
+                                id: orderItem.product_id,
+                            },
+                        });
 
-    
-    
-    */
+                        if (produtinho) {
+                            const unitPrice = Number(produtinho.price);
+                            const discount = Number(produtinho.discount);
+                            const quantity = Number(orderItem.quantity);
+                            const totalPrice =
+                ((unitPrice * (100 - discount)) / 100) * quantity;
+
+                            return await prisma.order_item.create({
+                                data: {
+                                    order_id: orderId,
+                                    product_id: orderItem.product_id,
+                                    unit_price: unitPrice,
+                                    discount: discount,
+                                    total_price: totalPrice,
+                                    quantity: quantity,
+                                },
+                            });
+                        }
+                    }
+                )
+            );
+
+            return { createdItemInOrder, createdItemsInOrderItems };
+        }
+    );
+
+    if (createdOrderAndOrderItems) {
+        return res
+            .status(201)
+            .send({ message: "Novo pedido cadastrado na base de dados" });
+    } else {
+        return res
+            .status(500)
+            .send({ error: "Falha ao criar novo pedido na base de dados" });
+    }
 });
 
 export default router;
