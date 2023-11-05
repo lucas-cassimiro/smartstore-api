@@ -81,6 +81,7 @@ const userController = {
                 return res.status(201).send({ message: "Usuário existente." });
             }
         } catch (error) {
+            console.log(error);
             return res.status(500).send({ message: "Erro ao editar usuário." });
         }
     },
