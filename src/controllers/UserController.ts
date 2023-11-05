@@ -59,11 +59,7 @@ const userController = {
         try {
             const id = Number(req.params.id);
 
-            const existentUser = await prisma.user.findUnique({
-                where: {
-                    id,
-                },
-            });
+            const existentUser = findExistentUser(id);
 
             if (!existentUser) {
                 return res.status(404).send({ message: "Usuário não existente!" });
@@ -89,25 +85,31 @@ const userController = {
         try {
             const { email, password } = req.body;
 
-            const user = await prisma.user.findUnique({
-                where: {
-                    email,
-                },
-            });
+            const findUser = await findExistentUser(email);
 
-            if (user && bcrypt.compareSync(password, user.password_hash)) {
-                const token = jsonwebtoken.sign(
-                    {
-                        exp: Math.floor(Date.now() / 1000) + 60 * 60,
-                        data: { id: user.id, email: user.email, admin: user.admin_auth },
+            if(findUser){
+                let user = await prisma.user.findUnique({
+                    where: {
+                        email,
                     },
-                    "segredo123"
-                );
+                });
 
-                return res.status(200).json({ token });
-            } else {
-                return res.status(500).json({ error: "Usuário ou senha incorretos." });
+                if (user && bcrypt.compareSync(password, user.password_hash)) {
+                    const token = jsonwebtoken.sign(
+                        {
+                            exp: Math.floor(Date.now() / 1000) + 60 * 60,
+                            data: { id: user.id, email: user.email, admin: user.admin_auth },
+                        },
+                        "segredo123"
+                    );
+    
+                    return res.status(200).json({ token });
+                } else {
+                    return res.status(500).json({ error: "Usuário ou senha incorretos." });
+                }
             }
+
+            
         } catch (error) {
             return res.status(500).send({ message: "Erro ao fazer login." });
         }
