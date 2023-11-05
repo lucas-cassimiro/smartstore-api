@@ -8,7 +8,6 @@ import findExistentUser from "../utils/userUtils";
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-
 type userProps = {
   email: string;
   password_hash: string;
