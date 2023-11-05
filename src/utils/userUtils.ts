@@ -18,15 +18,10 @@ export default async function findExistentUser(keySearch: any) {
             });
         }
     } else {
-
         return await prisma.user.findFirst({
-            where:{
-                id: Number(keySearch)
-            }
-        })
-        
+            where: {
+                id: Number(keySearch),
+            },
+        });
     }
-
-    
-
 }
