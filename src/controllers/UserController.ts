@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jsonwebtoken from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
 
 import "./../utils/userUtils";
@@ -20,8 +21,6 @@ type userProps = {
 
 const UserController = {
     index: async (req: Request, res: Response) => {
-        console.log(typeof res);
-        console.log(res);
         const allUsers = await prisma.user.findMany({});
         res.json({ allUsers });
     },
@@ -50,15 +49,18 @@ const UserController = {
                     data: newUser,
                 });
 
-                res.send("Objeto criado com sucesso!");
+                return res.status(201).send("Usuário criado com sucesso!");
             }
         } catch (error) {
-            console.log(error);
+            return res.status(500).send({message: "Erro ao cadastrar usuário"})
         }
     },
 
     edit: async (req: Request, res: Response) => {
-        const id = Number(req.params.id);
+
+        try {
+
+            const id = Number(req.params.id);
 
         const existentUser = await prisma.user.findUnique({
             where: {
@@ -78,9 +80,45 @@ const UserController = {
                 },
             });
 
-            console.log(updateUser);
+            return res.status(201).send({message: "Usuário existente."})
         }
+            
+        } catch (error) {
+            return res.status(500).send({message: "Erro ao editar usuário."})
+            
+        }
+
+        
     },
+
+    login: async(req:Request, res:Response)=>{
+
+        try {
+            const {email, password} = req.body
+
+            let user = await prisma.user.findUnique({
+                where:{
+                    email
+                }
+            })
+    
+            if(user && bcrypt.compareSync(password, user.password_hash)){
+
+                const token = jsonwebtoken.sign({
+                    exp: Math.floor(Date.now() / 1000) + (60 * 60),
+                    data:{id: user.id, email: user.email, admin: user.admin_auth}
+                }, 'segredo123')
+                
+                return res.status(200).json({token})
+
+            } else {
+                return res.status(500).json({error: "Usuário ou senha incorretos."})
+            }
+        } catch (error) {
+            return res.status(500).send({message: "Erro ao fazer login."})
+        }
+
+    }
 };
 
 export default UserController;
