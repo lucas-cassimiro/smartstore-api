@@ -1,16 +1,13 @@
-import UserController from "../../controllers/UserController";
+import userController from "../../controllers/UserController";
 import express from "express";
 import upload from "../../middleware/upload";
-import auth from "./../../middleware/auth"
+import auth from "./../../middleware/auth";
 
 const userRoutes = express.Router();
 
-userRoutes.get("/", UserController.index);
-
-userRoutes.post("/", UserController.create);
-
-userRoutes.post("/login", UserController.login)
-
-userRoutes.put("/:id", upload.any(), UserController.edit);
+userRoutes.get("/", userController.index);
+userRoutes.post("/", userController.create);
+userRoutes.post("/login", userController.login);
+userRoutes.put("/:id", upload.any(), userController.edit);
 
 export default userRoutes;
