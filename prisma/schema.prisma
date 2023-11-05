@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -94,6 +97,7 @@ model Stock {
   quantity       Int?
   products       Product?  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
 
+  @@unique(fields: [product_id])
   @@map("stocks")
 }
 

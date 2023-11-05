@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 
 import { Request, Response } from "express";
 
+import deleteQuantityProduct from './../../utils/quantityProductUtil';
+
 const router = express.Router();
 const prisma = new PrismaClient();
 
@@ -89,6 +91,7 @@ router.post("/", async (req: Request, res: Response) => {
     );
 
     if (createdOrderAndOrderItems) {
+        deleteQuantityProduct(user_order)
         return res
             .status(201)
             .send({ message: "Novo pedido cadastrado na base de dados" });
