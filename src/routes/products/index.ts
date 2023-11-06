@@ -1,13 +1,13 @@
-import express from "express";
+// import express from "express";
 
-import productController from "../../controllers/productController";
+// import productController from "../../controllers/productController";
 
-const productsRoutes = express.Router();
+// const productsRoutes = express.Router();
 
-productsRoutes.get("/", productController.index);
-productsRoutes.get("/:param", productController.indexParam);
-productsRoutes.post("/", productController.create);
-productsRoutes.put("/:id", productController.edit);
-productsRoutes.delete("/:id", productController.delete);
+// productsRoutes.get("/", productController.index);
+// productsRoutes.get("/:param", productController.indexParam);
+// productsRoutes.post("/", productController.create);
+// productsRoutes.put("/:id", productController.edit);
+// productsRoutes.delete("/:id", productController.delete);
 
-export default productsRoutes;
+// export default productsRoutes;

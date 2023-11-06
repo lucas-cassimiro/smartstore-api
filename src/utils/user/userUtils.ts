@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import identifyEmail from "../index/indexUtils";
-const prisma = new PrismaClient();
+import prisma from "../../../config/clientPrisma";
+
+import identifyEmail from "../index/findExistentItem";
 
 // export default async function findExistentUser(keySearch: any) {
 //     const valueType = typeof keySearch == "string";

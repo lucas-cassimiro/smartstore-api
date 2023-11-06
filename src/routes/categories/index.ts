@@ -1,15 +1,15 @@
-import express from "express";
+// import express from "express";
 
-const router = express.Router();
+// const router = express.Router();
 
-import CategoriesController from "./../../controllers/CategoriesController"
+// import CategoriesController from "./../../controllers/CategoriesController"
 
-router.get("/", CategoriesController.index);
+// router.get("/", CategoriesController.index);
 
-router.post("/", CategoriesController.create);
+// router.post("/", CategoriesController.create);
 
-router.put("/:id", CategoriesController.edit);
+// router.put("/:id", CategoriesController.edit);
 
-// router.delete("/:id", CategoriesController.delete);
+// // router.delete("/:id", CategoriesController.delete);
 
-export default router;
+// export default router;

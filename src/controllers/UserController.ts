@@ -1,14 +1,12 @@
-import prisma from "../../config/db";
+import prisma from "../../config/clientPrisma";
 
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
 
 import { Request, Response } from "express";
 import "../utils/user/userUtils";
-import findExistentItem from "../utils/index/indexUtils";
+import findExistentItem from "../utils/index/findExistentItem";
 
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 
 
 type userProps = {
@@ -31,7 +29,7 @@ const UserController = {
         try {
             const { email } = req.body as userProps;
 
-            const user = await findExistentItem(email);
+            const user = await findExistentItem('user', email);
 
             if (user) {
                 return res.status(404).send("usuário já existe");
@@ -62,7 +60,7 @@ const UserController = {
         try {
             const id = Number(req.params.id);
 
-            const existentUser = findExistentItem(id);
+            const existentUser = await findExistentItem('user', id);
 
             if (!existentUser) {
                 return res.status(404).send({ message: "Usuário não existente!" });
@@ -79,7 +77,6 @@ const UserController = {
                 return res.status(201).send({ message: "Usuário existente." });
             }
         } catch (error) {
-            console.log(error);
             return res.status(500).send({ message: "Erro ao editar usuário." });
         }
     },
@@ -88,9 +85,9 @@ const UserController = {
         try {
             const { email, password } = req.body;
 
-            const findUser = await findExistentItem(email);
+            const findUser = await findExistentItem('user', email);
 
-            if(findUser){
+            if (findUser) {
                 let user = await prisma.user.findUnique({
                     where: {
                         email,

@@ -1,11 +1,11 @@
-import express from "express";
+// import express from "express";
 
-import RatingController from "../../controllers/ratingController";
+// import RatingController from "../../controllers/RatingController";
 
-const ratingRoutes = express.Router();
+// const ratingRoutes = express.Router();
 
-ratingRoutes.get("/", RatingController.index);
-ratingRoutes.post("/", RatingController.create);
-ratingRoutes.put("/:id", RatingController.edit);
+// ratingRoutes.get("/", RatingController.index);
+// ratingRoutes.post("/", RatingController.create);
+// ratingRoutes.put("/:id", RatingController.edit);
 
-export default ratingRoutes;
+// export default ratingRoutes;
