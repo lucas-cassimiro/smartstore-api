@@ -1,9 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import prisma from "../../config/db";
 
 import { Request, Response } from "express";
 
-import findByEAN from "../utils/productUtils";
+import findByEAN from "../utils/product/productUtils";
 
 const productController = {
     index: async (req: Request, res: Response) => {
@@ -160,8 +159,6 @@ const productController = {
         } catch (error) {
             return res.status(500).send({ message: "Falha ao cadastrar produto" });
         }
-
-        res.status(201).send();
     },
 
     delete: async (req: Request, res: Response) => {

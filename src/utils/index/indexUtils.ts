@@ -1,12 +1,22 @@
 import { PrismaClient } from "@prisma/client";
-import identifyEmail from "./indexUtils";
 const prisma = new PrismaClient();
 
-export default async function findExistentUser(keySearch: any) {
+async function identifyEmail(find: string) {
+    let toggleEmail;
+
+    const includeAva = find.includes("@");
+    if (includeAva) {
+        toggleEmail = true;
+    }
+
+    return toggleEmail ? true : false;
+}
+
+async function  findExistentItem (keySearch: any) {
     const valueType = typeof keySearch == "string";
 
     if (valueType) {
-        const identify = identifyEmail(keySearch);
+        const identify = await identifyEmail(keySearch);
 
         if (identify) {
             return await prisma.user.findFirst({
@@ -25,3 +35,5 @@ export default async function findExistentUser(keySearch: any) {
         });
     }
 }
+
+export default findExistentItem

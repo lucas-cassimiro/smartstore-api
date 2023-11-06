@@ -1,25 +1,25 @@
+import prisma from "../../config/db";
+
 import bcrypt from "bcrypt";
 import jsonwebtoken from "jsonwebtoken";
-import "../utils/userUtils";
 
 import { Request, Response } from "express";
-import findExistentUser from "../utils/userUtils";
+import "../utils/user/userUtils";
+import findExistentItem from "../utils/index/indexUtils";
 
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
 
 
 type userProps = {
-  email: string;
-  password_hash: string;
-  cpf: string;
-  cellphone: string;
-  first_name: string;
-  last_name: string;
-  date_birth: string;
+    email: string;
+    password_hash: string;
+    cpf: string;
+    cellphone: string;
+    first_name: string;
+    last_name: string;
+    date_birth: string;
 };
 
-const userController = {
+const UserController = {
     index: async (req: Request, res: Response) => {
         const allUsers = await prisma.user.findMany({});
         res.json({ allUsers });
@@ -29,7 +29,7 @@ const userController = {
         try {
             const { email } = req.body as userProps;
 
-            const user = await findExistentUser(email);
+            const user = await findExistentItem(email);
 
             if (user) {
                 return res.status(404).send("usuário já existe");
@@ -60,7 +60,7 @@ const userController = {
         try {
             const id = Number(req.params.id);
 
-            const existentUser = findExistentUser(id);
+            const existentUser = findExistentItem(id);
 
             if (!existentUser) {
                 return res.status(404).send({ message: "Usuário não existente!" });
@@ -86,9 +86,9 @@ const userController = {
         try {
             const { email, password } = req.body;
 
-            const findUser = await findExistentUser(email);
+            const findUser = await findExistentItem(email);
 
-            if(findUser){
+            if (findUser) {
                 let user = await prisma.user.findUnique({
                     where: {
                         email,
@@ -103,18 +103,18 @@ const userController = {
                         },
                         "segredo123"
                     );
-    
+
                     return res.status(200).json({ token });
                 } else {
                     return res.status(500).json({ error: "Usuário ou senha incorretos." });
                 }
             }
 
-            
+
         } catch (error) {
             return res.status(500).send({ message: "Erro ao fazer login." });
         }
     },
 };
 
-export default userController;
+export default UserController;

@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 
 import { Request, Response } from "express";
 
-import removeQuantityInStock from "./../../utils/quantityProductUtil";
+import removeQuantityInStock from "../../utils/product/quantityProductUtil";
 
 const router = express.Router();
 const prisma = new PrismaClient();
