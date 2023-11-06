@@ -7,6 +7,8 @@ import { Request, Response } from "express";
 import "../utils/user/userUtils";
 import findExistentItem from "../utils/index/indexUtils";
 
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 
 type userProps = {
@@ -88,7 +90,7 @@ const UserController = {
 
             const findUser = await findExistentItem(email);
 
-            if (findUser) {
+            if(findUser){
                 let user = await prisma.user.findUnique({
                     where: {
                         email,
