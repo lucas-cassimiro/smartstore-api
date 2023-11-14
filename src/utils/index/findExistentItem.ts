@@ -11,36 +11,32 @@ async function identifyEmail(find: string) {
     return toggleEmail ? true : false;
 }
 
-async function  findExistentItem (item:string, keySearch: string | number) {
+async function findExistentItem(item: string, keySearch: string | number) {
+    switch (item) {
+    case "user":
+        const valueType = typeof keySearch == "string";
 
-    switch(item){
+        if (valueType) {
+            const identify = await identifyEmail(keySearch);
 
-        case 'user':
-            const valueType = typeof keySearch == "string";
-
-            if (valueType) {
-                const identify = await identifyEmail(keySearch);
-        
-                if (identify) {
-                    return await prisma.user.findFirst({
-                        where: {
-                            email: {
-                                equals: keySearch,
-                            },
-                        },
-                    });
-                }
-            } else {
+            if (identify) {
                 return await prisma.user.findFirst({
                     where: {
-                        id: Number(keySearch),
+                        email: {
+                            equals: keySearch,
+                        },
                     },
                 });
             }
+        } else {
+            return await prisma.user.findFirst({
+                where: {
+                    id: Number(keySearch),
+                },
+            });
+        }
         break;
-
-
     }
 }
 
-export default findExistentItem
+export default findExistentItem;
