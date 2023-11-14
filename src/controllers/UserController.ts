@@ -1,22 +1,24 @@
 import prisma from "../../config/clientPrisma";
 
 import bcrypt from "bcrypt";
-import jsonwebtoken from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 import { Request, Response } from "express";
 import "../utils/user/userUtils";
 import findExistentItem from "../utils/index/findExistentItem";
 
-
-
-type userProps = {
-    email: string;
-    password_hash: string;
-    cpf: string;
-    cellphone: string;
-    first_name: string;
-    last_name: string;
-    date_birth: string;
+export type userProps = {
+  id: number;
+  email: string;
+  password_hash: string;
+  cpf: string | null;
+  cellphone: string | null;
+  first_name: string | null;
+  last_name: string | null;
+  date_birth: Date | null;
+  created_at: Date | null;
+  last_login: Date | null;
+  admin_auth: boolean | null;
 };
 
 const UserController = {
@@ -29,10 +31,16 @@ const UserController = {
         try {
             const { email } = req.body as userProps;
 
-            const user = await findExistentItem('user', email);
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: email,
+                },
+            });
+
+            // await findExistentItem("user", email);
 
             if (user) {
-                return res.status(404).send("usuário já existe");
+                return res.status(404).json({ message: "Email já cadastrado." });
             } else {
                 const newUser = {
                     ...(req.body as userProps),
@@ -49,9 +57,10 @@ const UserController = {
                     data: newUser,
                 });
 
-                return res.status(201).send("Usuário criado com sucesso!");
+                return res.status(201).json({ message: "Usuário criado com sucesso!" });
             }
         } catch (error) {
+            console.log(error);
             return res.status(500).send({ message: "Erro ao cadastrar usuário" });
         }
     },
@@ -60,7 +69,7 @@ const UserController = {
         try {
             const id = Number(req.params.id);
 
-            const existentUser = await findExistentItem('user', id);
+            const existentUser = await findExistentItem("user", id);
 
             if (!existentUser) {
                 return res.status(404).send({ message: "Usuário não existente!" });
@@ -83,36 +92,50 @@ const UserController = {
 
     login: async (req: Request, res: Response) => {
         try {
-            const { email, password } = req.body;
+            const { email, password_hash } = req.body;
 
-            const findUser = await findExistentItem('user', email);
+            // const findUser = await findExistentItem("user", email);
 
-            if (findUser) {
-                let user = await prisma.user.findUnique({
-                    where: {
-                        email,
-                    },
-                });
+            const findUser = await prisma.user.findUnique({
+                where: {
+                    email: email,
+                },
+            });
 
-                if (user && bcrypt.compareSync(password, user.password_hash)) {
-                    const token = jsonwebtoken.sign(
-                        {
-                            exp: Math.floor(Date.now() / 1000) + 60 * 60,
-                            data: { id: user.id, email: user.email, admin: user.admin_auth },
-                        },
-                        "segredo123"
-                    );
+            if (!findUser)
+                return res.status(400).send({ message: "E-mail ou senha inválidos." });
 
-                    return res.status(200).json({ token });
-                } else {
-                    return res.status(500).json({ error: "Usuário ou senha incorretos." });
-                }
+            const verifyPass = await bcrypt.compare(
+                password_hash,
+                findUser.password_hash
+            );
+
+            console.log("verifyPass:", verifyPass);
+
+            if (!verifyPass) {
+                return res.status(400).send({ message: "E-mail ou senha inválidos." });
             }
 
+            const token = jwt.sign({ data: findUser }, process.env.JWT_PASS ?? "", {
+                expiresIn: "8h",
+            });
 
+            console.log(token);
+
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { password_hash: _, ...userLogin } = findUser;
+
+            return res.status(200).json({
+                user: userLogin,
+                token: token,
+            });
         } catch (error) {
+            console.log(error);
             return res.status(500).send({ message: "Erro ao fazer login." });
         }
+    },
+    profile: async (req: Request, res: Response) => {
+        return res.json(req.user);
     },
 };
 
