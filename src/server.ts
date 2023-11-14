@@ -1,12 +1,13 @@
 import express from "express";
 import routerUser from "./routes/users";
-// import routerProducts from "./routes/products";
-// import routerStock from "./routes/stock";
-// import routerColors from "./routes/colors";
-// import routerStorages from "./routes/storages";
-// import routerOrders from "./routes/orders";
-// import routerRatings from "./routes/ratings";
-// import routerCategories from "./routes/categories";
+import routerProducts from "./routes/products";
+import routerStock from "./routes/stock";
+import routerColors from "./routes/colors";
+import routerStorages from "./routes/storages";
+//import routerOrders from "./routes/orders";
+import routerRatings from "./routes/ratings";
+import routerOrderItems from "./routes/orderItems";
+//import routerCategories from "./routes/categories";
 
 const port = 3001;
 const app = express();
@@ -20,17 +21,18 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use("/users", routerUser);
-// app.use("/products", routerProducts);
-// app.use("/stock", routerStock);
-// app.use("/colors", routerColors);
-// app.use("/storages", routerStorages);
-// app.use("/categories", routerCategories);
-// app.use("/orders", routerOrders);
-// app.use("/ratings", routerRatings);
-// app.use("/order_items", routerOrderItems);
+app.use("/produto", routerProducts);
+app.use("/estoque", routerStock);
+app.use("/cor", routerColors);
+app.use("/armazenamento", routerStorages);
+//app.use("/categories", routerCategories);
+//app.use("/pedidos", routerOrders);
+app.use("/ratings", routerRatings);
+app.use("/pedidos", routerOrderItems);
 
 app.listen(port, () => {
     console.log(`Servidor em execucação na porta ${port}`);
