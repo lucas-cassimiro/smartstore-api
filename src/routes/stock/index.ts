@@ -1,10 +1,10 @@
-// import express from "express";
+import express from "express";
 
-// import StockController from "../../controllers/StockController";
+import StockController from "../../controllers/stockController";
 
-// const stockRoutes = express.Router();
+const stockRoutes = express.Router();
 
-// stockRoutes.get("/", StockController.index);
-// stockRoutes.put("/:id", StockController.edit);
+stockRoutes.get("/", StockController.index);
+stockRoutes.put("/:id", StockController.edit);
 
-// export default stockRoutes;
+export default stockRoutes;
