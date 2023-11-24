@@ -1,11 +1,11 @@
 import express from "express";
 
-import StorageController from "../../controllers/storageController";
+import { StorageController } from "../../controllers/StorageController";
 
 const storageRoutes = express.Router();
 
-storageRoutes.get("/", StorageController.index);
-storageRoutes.post("/", StorageController.create);
-storageRoutes.put("/:id", StorageController.edit);
+storageRoutes.get("/", new StorageController().getStorages);
+storageRoutes.post("/", new StorageController().create);
+storageRoutes.put("/:id", new StorageController().edit);
 
 export default storageRoutes;
