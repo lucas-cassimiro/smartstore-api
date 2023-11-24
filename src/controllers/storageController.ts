@@ -6,13 +6,13 @@ interface Storage {
   capacity: number;
 }
 
-const StorageController = {
-    index: async (req: Request, res: Response) => {
+export class StorageController {
+    async getStorages(req: Request, res: Response) {
         const storages = await prisma.storage.findMany({});
         res.json(storages);
-    },
+    }
 
-    create: async (req: Request, res: Response) => {
+    async create(req: Request, res: Response) {
         const { capacity } = req.body as Storage;
 
         try {
@@ -30,7 +30,7 @@ const StorageController = {
 
             await prisma.storage.create({
                 data: {
-                    capacity: Number(capacity)
+                    capacity: Number(capacity),
                 },
             });
         } catch (error) {
@@ -43,9 +43,9 @@ const StorageController = {
         res.status(200).send({
             message: "Novo armazenamento cadastrado na base de dados ",
         });
-    },
+    }
 
-    edit: async (req: Request, res: Response) => {
+    async edit(req: Request, res: Response) {
         const id = Number(req.params.id);
 
         const { capacity } = req.body;
@@ -68,7 +68,7 @@ const StorageController = {
                     id,
                 },
                 data: {
-                    capacity: Number(capacity)
+                    capacity: Number(capacity),
                 },
             });
         } catch (error) {
@@ -81,7 +81,5 @@ const StorageController = {
         res
             .status(200)
             .send({ message: "Armazenamento alterada na base de dados " });
-    },
-};
-
-export default StorageController;
+    }
+}
