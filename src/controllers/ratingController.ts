@@ -2,8 +2,8 @@ import prisma from "../../config/clientPrisma";
 
 import { Request, Response } from "express";
 
-const RatingController = {
-    index: async (req: Request, res: Response) => {
+export class RatingController {
+    async getRating(req: Request, res: Response) {
         const ratings = await prisma.rating.findMany({
             include: {
                 products: true,
@@ -12,9 +12,9 @@ const RatingController = {
         });
 
         res.json(ratings);
-    },
+    }
 
-    create: async (req: Request, res: Response) => {
+    async create(req: Request, res: Response) {
         const { user_id, product_id, score } = req.body;
 
         try {
@@ -33,9 +33,7 @@ const RatingController = {
         }
 
         res.status(200).send({ message: "Avaliação registrada no banco de dados" });
-    },
+    }
 
-    // edit: async (req: Request, res: Response) => { },
-};
-
-export default RatingController;
+    // async edit (req: Request, res: Response) { },
+}
