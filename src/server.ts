@@ -9,7 +9,7 @@ import routerColors from "./routes/colors";
 import routerStorages from "./routes/storages";
 import routerRatings from "./routes/ratings";
 import routerOrderItems from "./routes/orderItems";
-import routerAddress from "./routes/address";
+import routerAddress from "./routes/addresses";
 import routerCategories from "./routes/categories";
 //import routerOrders from "./routes/orders";
 
