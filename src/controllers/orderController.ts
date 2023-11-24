@@ -14,6 +14,20 @@ const OrderController = {
         res.json(orders);
     },
 
+    indexParam: async (req: Request, res: Response) => {
+        const id = Number(req.params.id);
+
+        //fazer verificações se o usuário existe etc
+
+        const orders = await prisma.order.findMany({
+            where: {
+                user_id: id,
+            },
+        });
+
+        res.json(orders);
+    },
+
     create: async (req: Request, res: Response) => {
         const { user_id, user_order } = req.body;
 
