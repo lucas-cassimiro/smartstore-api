@@ -16,7 +16,7 @@ type AddressType = {
 export class AddressController {
     async getAddress(req: Request, res: Response) {
         try {
-            const id = Number(req.params.id);
+            const id: number = Number(req.params.id);
 
             const findUser = await prisma.user.findUnique({
                 where: {
