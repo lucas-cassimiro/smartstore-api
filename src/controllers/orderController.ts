@@ -3,8 +3,8 @@ import prisma from "../../config/clientPrisma";
 import { Request, Response } from "express";
 import removeQuantityInStock from "../utils/product/quantityProductUtil";
 
-const OrderController = {
-    index: async (req: Request, res: Response) => {
+export class OrderController {
+    async getOrder(req: Request, res: Response) {
         const orders = await prisma.order.findMany({
             include: {
                 users: true,
@@ -12,9 +12,9 @@ const OrderController = {
         });
 
         res.json(orders);
-    },
+    }
 
-    indexParam: async (req: Request, res: Response) => {
+    async getOrderParam(req: Request, res: Response) {
         const id = Number(req.params.id);
 
         //fazer verificações se o usuário existe etc
@@ -26,9 +26,9 @@ const OrderController = {
         });
 
         res.json(orders);
-    },
+    }
 
-    create: async (req: Request, res: Response) => {
+    async create(req: Request, res: Response) {
         const { user_id, user_order } = req.body;
 
         let totalAmount = 0;
@@ -110,7 +110,5 @@ const OrderController = {
                 .status(500)
                 .send({ error: "Falha ao criar novo pedido na base de dados" });
         }
-    },
-};
-
-export default OrderController;
+    }
+}
