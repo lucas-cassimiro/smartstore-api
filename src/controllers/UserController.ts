@@ -21,13 +21,13 @@ export type userProps = {
   admin_auth: boolean | null;
 };
 
-const UserController = {
-    index: async (req: Request, res: Response) => {
-        const allUsers = await prisma.user.findMany({});
-        res.json({ allUsers });
-    },
+export class UserController {
+    async getUsers(req: Request, res: Response) {
+        const users = await prisma.user.findMany({});
+        res.json(users);
+    }
 
-    create: async (req: Request, res: Response) => {
+    async create(req: Request, res: Response) {
         try {
             const { email } = req.body as userProps;
 
@@ -63,9 +63,9 @@ const UserController = {
             console.log(error);
             return res.status(500).send({ message: "Erro ao cadastrar usuário" });
         }
-    },
+    }
 
-    edit: async (req: Request, res: Response) => {
+    async edit(req: Request, res: Response) {
         try {
             const id = Number(req.params.id);
 
@@ -110,11 +110,11 @@ const UserController = {
             console.log(error);
             return res.status(500).send({ message: "Erro ao editar usuário." });
         }
-        
-        return res.status(201).send({ message: "Dados alterados." });
-    },
 
-    login: async (req: Request, res: Response) => {
+        return res.status(201).send({ message: "Dados alterados." });
+    }
+
+    async login(req: Request, res: Response) {
         try {
             const { email, password_hash } = req.body;
 
@@ -157,10 +157,8 @@ const UserController = {
             console.log(error);
             return res.status(500).send({ message: "Erro ao fazer login." });
         }
-    },
-    profile: async (req: Request, res: Response) => {
+    }
+    async profile(req: Request, res: Response) {
         return res.json(req.user);
-    },
-};
-
-export default UserController;
+    }
+}
