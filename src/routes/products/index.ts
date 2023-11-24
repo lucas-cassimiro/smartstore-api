@@ -2,7 +2,7 @@ import express from "express";
 
 import productController from "../../controllers/productController";
 
-import upload from "../../middleware/uploadProducts";
+import upload from "../../middleware/multerProductImages";
 
 const productsRoutes = express.Router();
 
