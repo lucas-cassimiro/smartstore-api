@@ -94,6 +94,8 @@ const productController = {
 
         const img = req.file?.filename;
 
+        console.log(img);
+
         try {
             const productWithSameEAN = await findByEAN(ean);
 
