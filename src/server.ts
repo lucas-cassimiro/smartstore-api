@@ -1,7 +1,7 @@
 import express from "express";
 import routerUser from "./routes/users";
 import routerProducts from "./routes/products";
-import routerStock from "./routes/stock";
+import routerStock from "./routes/stocks";
 import routerColors from "./routes/colors";
 import routerStorages from "./routes/storages";
 import routerRatings from "./routes/ratings";
@@ -36,7 +36,7 @@ app.use("/pedidos", routerOrderItems);
 app.use("/endereco", routerAddress);
 app.use("/categoria", routerCategories);
 
-//app.use("/pedidos", routerOrders);
+//app.use("/pedidosorder", routerOrders);
 
 app.listen(port, () => {
     console.log(`Servidor em execucação na porta ${port}`);
