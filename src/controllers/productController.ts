@@ -4,9 +4,9 @@ import { Request, Response } from "express";
 
 import findByEAN from "../utils/product/productUtils";
 
-const productController = {
-    index: async (req: Request, res: Response) => {
-        const allProducts = await prisma.product.findMany({
+export class ProductController {
+    async getProducts(req: Request, res: Response) {
+        const products = await prisma.product.findMany({
             include: {
                 categories: true,
                 colors: true,
@@ -14,11 +14,12 @@ const productController = {
             },
         });
 
-        res.json(allProducts);
-    },
+        res.json(products);
+    }
 
-    indexParam: async (req: Request, res: Response) => {
+    async getProductsParam(req: Request, res: Response) {
         const param = req.params.param;
+
         try {
             const numericParam = Number(param);
 
@@ -71,9 +72,9 @@ const productController = {
         } catch (error) {
             return res.status(500).send({ message: "Falha na consulta de produtos" });
         }
-    },
+    }
 
-    create: async (req: Request, res: Response) => {
+    async create(req: Request, res: Response) {
         const {
             name,
             price,
@@ -169,9 +170,9 @@ const productController = {
             console.log(error);
             return res.status(500).send({ message: "Falha ao cadastrar produto" });
         }
-    },
+    }
 
-    delete: async (req: Request, res: Response) => {
+    async delete(req: Request, res: Response) {
         const id = Number(req.params.id);
         try {
             const productExistent = await prisma.product.findUnique({
@@ -219,9 +220,9 @@ const productController = {
         }
 
         res.status(200).send();
-    },
+    }
 
-    edit: async (req: Request, res: Response) => {
+    async edit(req: Request, res: Response) {
         const id = Number(req.params.id);
 
         const {
@@ -271,7 +272,5 @@ const productController = {
         }
 
         res.status(200).send({ message: "Produto alterado na base de dados " });
-    },
-};
-
-export default productController;
+    }
+}
