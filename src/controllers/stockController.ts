@@ -2,9 +2,9 @@ import prisma from "../../config/clientPrisma";
 
 import { Request, Response } from "express";
 
-const StockController = {
-    index: async (req: Request, res: Response) => {
-        const products = await prisma.stock.findMany({
+export class StockController {
+    async getStock(req: Request, res: Response) {
+        const productsInStock = await prisma.stock.findMany({
             include: {
                 products: {
                     include: {
@@ -16,10 +16,10 @@ const StockController = {
             },
         });
 
-        res.json(products);
-    },
+        res.json(productsInStock);
+    }
 
-    edit: async (req: Request, res: Response) => {
+    async edit(req: Request, res: Response) {
         const product_id = Number(req.params.id);
 
         const { status, purchase_price, expiry_date, updated_at, quantity } =
@@ -62,7 +62,5 @@ const StockController = {
                 .status(500)
                 .send({ message: "Falha ao atualizar o estoque do produto" });
         }
-    },
-};
-
-export default StockController;
+    }
+}
