@@ -2,13 +2,13 @@ import prisma from "../../config/clientPrisma";
 
 import { Request, Response } from "express";
 
-const ColorController = {
-    index: async (req: Request, res: Response) => {
+export class ColorController {
+    async getColor(req: Request, res: Response) {
         const colors = await prisma.color.findMany({});
         res.json(colors);
-    },
+    }
 
-    create: async (req: Request, res: Response) => {
+    async create(req: Request, res: Response) {
         const { name } = req.body;
 
         try {
@@ -35,9 +35,9 @@ const ColorController = {
         }
 
         res.status(200).send({ message: "Nova cor cadastrada na base de dados " });
-    },
+    }
 
-    edit: async (req: Request, res: Response) => {
+    async edit(req: Request, res: Response) {
         const id = Number(req.params.id);
         const { name } = req.body;
 
@@ -68,7 +68,5 @@ const ColorController = {
         }
 
         res.status(200).send({ message: "Cor alterada na base de dados " });
-    },
-};
-
-export default ColorController;
+    }
+}
