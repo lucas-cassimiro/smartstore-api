@@ -22,9 +22,9 @@ export const authMiddleware = async (
         console.log(token);
 
         const { id } = (
-      jwt.verify(token, process.env.JWT_PASS ?? "") as {
-        data: { id: number };
-      }
+        jwt.verify(token, process.env.JWT_PASS ?? "") as {
+          data: { id: number };
+        }
         ).data;
 
         const findUser = await prisma.user.findUnique({
