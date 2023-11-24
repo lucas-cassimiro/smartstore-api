@@ -1,13 +1,13 @@
-// import express from "express";
+import express from "express";
 
-// const router = express.Router();
+import { CategorieController } from "../../controllers/CategoriesController";
 
-// import CategoieCo
+const categorieRoutes = express.Router();
 
-// router.get("/", CategoriesController.index);
-// router.post("/", CategoriesController.create);
-// router.put("/:id", CategoriesController.edit);
+categorieRoutes.get("/", new CategorieController().getCategorie);
+categorieRoutes.post("/", new CategorieController().create);
+categorieRoutes.put("/:id", new CategorieController().edit);
 
 // router.delete("/:id", CategoriesController.delete);
 
-// export default router;
+export default categorieRoutes;
