@@ -1,4 +1,7 @@
 import express from "express";
+
+import { Request, Response, NextFunction } from "express";
+
 import routerUser from "./routes/users";
 import routerProducts from "./routes/products";
 import routerStock from "./routes/stocks";
@@ -8,13 +11,12 @@ import routerRatings from "./routes/ratings";
 import routerOrderItems from "./routes/orderItems";
 import routerAddress from "./routes/address";
 import routerCategories from "./routes/categories";
-
 //import routerOrders from "./routes/orders";
 
 const port = 3001;
 const app = express();
 
-app.use((req, res, next) => {
+app.use((_req: Request, res: Response, next: NextFunction) => {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
