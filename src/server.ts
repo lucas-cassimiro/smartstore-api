@@ -2,6 +2,8 @@ import express from "express";
 
 import { Request, Response, NextFunction } from "express";
 
+import"dotenv/config";
+
 import routerUser from "./routes/users";
 import routerProducts from "./routes/products";
 import routerStock from "./routes/stocks";
