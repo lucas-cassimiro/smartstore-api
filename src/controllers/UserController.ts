@@ -11,14 +11,14 @@ export type userProps = {
   id: number;
   email: string;
   password_hash: string;
-  cpf: string | null;
-  cellphone: string | null;
-  first_name: string | null;
-  last_name: string | null;
-  date_birth: Date | null;
-  created_at: Date | null;
+  cpf: string;
+  cellphone: string;
+  first_name: string;
+  last_name: string;
+  date_birth: Date;
+  created_at: Date;
   last_login: Date | null;
-  admin_auth: boolean | null;
+  admin_auth: boolean;
 };
 
 export class UserController {
