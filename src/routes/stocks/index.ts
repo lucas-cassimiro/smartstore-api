@@ -1,6 +1,6 @@
 import express from "express";
 
-import { StockController } from "../../controllers/stockController";
+import { StockController } from "../../controllers/StockController";
 
 const stockRoutes = express.Router();
 

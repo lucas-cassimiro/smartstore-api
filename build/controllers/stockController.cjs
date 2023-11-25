@@ -17,19 +17,19 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/controllers/stockController.ts
-var stockController_exports = {};
-__export(stockController_exports, {
+// src/controllers/StockController.ts
+var StockController_exports = {};
+__export(StockController_exports, {
   StockController: () => StockController
 });
-module.exports = __toCommonJS(stockController_exports);
+module.exports = __toCommonJS(StockController_exports);
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/stockController.ts
+// src/controllers/StockController.ts
 var StockController = class {
   async getStock(req, res) {
     const productsInStock = await clientPrisma_default.stock.findMany({

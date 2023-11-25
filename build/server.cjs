@@ -344,7 +344,7 @@ async function findByEAN(nameSearch) {
   });
 }
 
-// src/controllers/productController.ts
+// src/controllers/ProductController.ts
 var ProductController = class {
   async getProducts(req, res) {
     const products = await clientPrisma_default.product.findMany({
@@ -598,7 +598,7 @@ var products_default = productsRoutes;
 // src/routes/stocks/index.ts
 var import_express3 = __toESM(require("express"), 1);
 
-// src/controllers/stockController.ts
+// src/controllers/StockController.ts
 var StockController = class {
   async getStock(req, res) {
     const productsInStock = await clientPrisma_default.stock.findMany({
@@ -656,7 +656,7 @@ var stocks_default = stockRoutes;
 // src/routes/colors/index.ts
 var import_express4 = __toESM(require("express"), 1);
 
-// src/controllers/colorController.ts
+// src/controllers/ColorController.ts
 var ColorController = class {
   async getColor(req, res) {
     const colors = await clientPrisma_default.color.findMany({});
@@ -722,7 +722,7 @@ var colors_default = colorRoutes;
 // src/routes/storages/index.ts
 var import_express5 = __toESM(require("express"), 1);
 
-// src/controllers/storageController.ts
+// src/controllers/StorageController.ts
 var StorageController = class {
   async getStorages(req, res) {
     const storages = await clientPrisma_default.storage.findMany({});
@@ -792,7 +792,7 @@ var storages_default = storageRoutes;
 // src/routes/ratings/index.ts
 var import_express6 = __toESM(require("express"), 1);
 
-// src/controllers/ratingController.ts
+// src/controllers/RatingController.ts
 var RatingController = class {
   async getRating(req, res) {
     const ratings = await clientPrisma_default.rating.findMany({
@@ -831,7 +831,7 @@ var ratings_default = ratingRoutes;
 // src/routes/orderItems/index.ts
 var import_express7 = __toESM(require("express"), 1);
 
-// src/controllers/orderItemsController.ts
+// src/controllers/OrderItemsController.ts
 var OrderItemsController = class {
   async getOrderItem(req, res) {
     const orderItems = await clientPrisma_default.order_item.findMany({

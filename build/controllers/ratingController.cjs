@@ -17,19 +17,19 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/controllers/ratingController.ts
-var ratingController_exports = {};
-__export(ratingController_exports, {
+// src/controllers/RatingController.ts
+var RatingController_exports = {};
+__export(RatingController_exports, {
   RatingController: () => RatingController
 });
-module.exports = __toCommonJS(ratingController_exports);
+module.exports = __toCommonJS(RatingController_exports);
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/ratingController.ts
+// src/controllers/RatingController.ts
 var RatingController = class {
   async getRating(req, res) {
     const ratings = await clientPrisma_default.rating.findMany({

@@ -17,19 +17,19 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/controllers/storageController.ts
-var storageController_exports = {};
-__export(storageController_exports, {
+// src/controllers/StorageController.ts
+var StorageController_exports = {};
+__export(StorageController_exports, {
   StorageController: () => StorageController
 });
-module.exports = __toCommonJS(storageController_exports);
+module.exports = __toCommonJS(StorageController_exports);
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/storageController.ts
+// src/controllers/StorageController.ts
 var StorageController = class {
   async getStorages(req, res) {
     const storages = await clientPrisma_default.storage.findMany({});

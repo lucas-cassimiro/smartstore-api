@@ -17,12 +17,12 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/controllers/orderController.ts
-var orderController_exports = {};
-__export(orderController_exports, {
+// src/controllers/OrderController.ts
+var OrderController_exports = {};
+__export(OrderController_exports, {
   OrderController: () => OrderController
 });
-module.exports = __toCommonJS(orderController_exports);
+module.exports = __toCommonJS(OrderController_exports);
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -60,7 +60,7 @@ async function removeQuantityInStock(userOrder) {
   }
 }
 
-// src/controllers/orderController.ts
+// src/controllers/OrderController.ts
 var OrderController = class {
   async getOrder(req, res) {
     const orders = await clientPrisma_default.order.findMany({

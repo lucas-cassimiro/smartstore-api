@@ -71,7 +71,7 @@ async function removeQuantityInStock(userOrder) {
   }
 }
 
-// src/controllers/orderController.ts
+// src/controllers/OrderController.ts
 var OrderController = class {
   async getOrder(req, res) {
     const orders = await clientPrisma_default.order.findMany({

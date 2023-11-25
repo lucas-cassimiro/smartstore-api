@@ -40,7 +40,7 @@ var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/orderItemsController.ts
+// src/controllers/OrderItemsController.ts
 var OrderItemsController = class {
   async getOrderItem(req, res) {
     const orderItems = await clientPrisma_default.order_item.findMany({

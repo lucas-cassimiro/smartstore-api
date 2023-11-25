@@ -51,7 +51,7 @@ async function findByEAN(nameSearch) {
   });
 }
 
-// src/controllers/productController.ts
+// src/controllers/ProductController.ts
 var ProductController = class {
   async getProducts(req, res) {
     const products = await clientPrisma_default.product.findMany({

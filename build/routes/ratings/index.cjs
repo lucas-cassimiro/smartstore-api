@@ -40,7 +40,7 @@ var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/ratingController.ts
+// src/controllers/RatingController.ts
 var RatingController = class {
   async getRating(req, res) {
     const ratings = await clientPrisma_default.rating.findMany({

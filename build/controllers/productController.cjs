@@ -17,12 +17,12 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/controllers/productController.ts
-var productController_exports = {};
-__export(productController_exports, {
+// src/controllers/ProductController.ts
+var ProductController_exports = {};
+__export(ProductController_exports, {
   ProductController: () => ProductController
 });
-module.exports = __toCommonJS(productController_exports);
+module.exports = __toCommonJS(ProductController_exports);
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -40,7 +40,7 @@ async function findByEAN(nameSearch) {
   });
 }
 
-// src/controllers/productController.ts
+// src/controllers/ProductController.ts
 var ProductController = class {
   async getProducts(req, res) {
     const products = await clientPrisma_default.product.findMany({

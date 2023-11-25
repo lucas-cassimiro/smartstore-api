@@ -17,19 +17,19 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/controllers/orderItemsController.ts
-var orderItemsController_exports = {};
-__export(orderItemsController_exports, {
+// src/controllers/OrderItemsController.ts
+var OrderItemsController_exports = {};
+__export(OrderItemsController_exports, {
   OrderItemsController: () => OrderItemsController
 });
-module.exports = __toCommonJS(orderItemsController_exports);
+module.exports = __toCommonJS(OrderItemsController_exports);
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/orderItemsController.ts
+// src/controllers/OrderItemsController.ts
 var OrderItemsController = class {
   async getOrderItem(req, res) {
     const orderItems = await clientPrisma_default.order_item.findMany({

@@ -40,7 +40,7 @@ var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/storageController.ts
+// src/controllers/StorageController.ts
 var StorageController = class {
   async getStorages(req, res) {
     const storages = await clientPrisma_default.storage.findMany({});

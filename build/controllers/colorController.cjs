@@ -17,19 +17,19 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/controllers/colorController.ts
-var colorController_exports = {};
-__export(colorController_exports, {
+// src/controllers/ColorController.ts
+var ColorController_exports = {};
+__export(ColorController_exports, {
   ColorController: () => ColorController
 });
-module.exports = __toCommonJS(colorController_exports);
+module.exports = __toCommonJS(ColorController_exports);
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/colorController.ts
+// src/controllers/ColorController.ts
 var ColorController = class {
   async getColor(req, res) {
     const colors = await clientPrisma_default.color.findMany({});

@@ -40,7 +40,7 @@ var import_client = require("@prisma/client");
 var prisma = new import_client.PrismaClient();
 var clientPrisma_default = prisma;
 
-// src/controllers/colorController.ts
+// src/controllers/ColorController.ts
 var ColorController = class {
   async getColor(req, res) {
     const colors = await clientPrisma_default.color.findMany({});
