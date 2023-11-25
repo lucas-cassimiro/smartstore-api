@@ -135,6 +135,7 @@ var require_cli_options = __commonJS({
 
 // src/server.ts
 var import_express10 = __toESM(require("express"), 1);
+var import_cors = __toESM(require("cors"), 1);
 
 // node_modules/dotenv/config.js
 (function() {
@@ -989,14 +990,7 @@ var categories_default = categorieRoutes;
 // src/server.ts
 var port = 3001;
 var app = (0, import_express10.default)();
-app.use((_req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header("Access-Control-Allow-Credentials", "true");
-  next();
-});
+app.use((0, import_cors.default)());
 app.use(import_express10.default.urlencoded({ extended: false }));
 app.use(import_express10.default.json());
 app.use("/users", users_default);
