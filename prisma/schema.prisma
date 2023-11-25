@@ -127,7 +127,6 @@ model Storage {
 model User {
   id            Int       @id @default(autoincrement())
   email         String    @db.VarChar(255)
-  password_hash String    @db.VarChar(14)
   cpf           String    @db.VarChar(14)
   cellphone     String    @db.VarChar(15)
   first_name    String    @db.VarChar(50)
@@ -136,6 +135,7 @@ model User {
   created_at    DateTime  @db.Timestamp(6)
   last_login    DateTime? @db.Timestamp(6)
   admin_auth    Boolean
+  password_hash String    @db.VarChar(255)
   addresses     Address[]
   orders        Order[]
   ratings       Rating[]
