@@ -9,22 +9,22 @@ datasource db {
 
 model Address {
   id             Int     @id @default(autoincrement())
-  user_id        Int?
-  street_address String? @db.VarChar(255)
-  number_address Int?
+  user_id        Int
+  street_address String  @db.VarChar(255)
+  number_address Int
   complement     String? @db.VarChar(100)
-  neighborhood   String? @db.VarChar(100)
-  city           String? @db.VarChar(100)
-  state          String? @db.VarChar(50)
-  recipient      String? @db.VarChar(255)
-  users          User?   @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_user")
+  neighborhood   String  @db.VarChar(100)
+  city           String  @db.VarChar(100)
+  state          String  @db.VarChar(50)
+  recipient      String  @db.VarChar(100)
+  users          User    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
 
   @@map("addresses")
 }
 
 model Categorie {
   id       Int       @id @default(autoincrement())
-  name     String?   @db.VarChar(50)
+  name     String    @db.VarChar(50)
   products Product[]
 
   @@unique(fields: [name])
@@ -33,7 +33,7 @@ model Categorie {
 
 model Color {
   id       Int       @id @default(autoincrement())
-  name     String?   @db.VarChar(50)
+  name     String    @db.VarChar(50)
   products Product[]
 
   @@map("colors")
@@ -41,46 +41,46 @@ model Color {
 
 model Order_item {
   id          Int      @id @default(autoincrement())
-  order_id    Int?
-  product_id  Int?
-  unit_price  Decimal? @db.Decimal(10, 2)
+  order_id    Int
+  product_id  Int
+  unit_price  Decimal  @db.Decimal(10, 2)
   discount    Decimal? @db.Decimal(5, 2)
-  total_price Decimal? @db.Decimal(10, 2)
-  quantity    Int?
-  orders      Order?   @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order")
-  products    Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
+  total_price Decimal  @db.Decimal(10, 2)
+  quantity    Int
+  orders      Order    @relation(fields: [order_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_order")
+  products    Product  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
 
   @@map("order_items")
 }
 
 model Order {
   id           Int          @id @default(autoincrement())
-  user_id      Int?
-  order_date   DateTime?    @db.Timestamp(6)
-  total_amount Decimal?     @db.Decimal(10, 2)
+  user_id      Int
+  order_date   DateTime     @db.Timestamp(6)
+  total_amount Decimal      @db.Decimal(10, 2)
   order_items  Order_item[]
-  users        User?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
+  users        User         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
 
   @@map("orders")
 }
 
 model Product {
   id            Int          @id @default(autoincrement())
-  name          String?      @db.VarChar(100)
-  price         Decimal?     @db.Decimal(10, 2)
+  name          String       @db.VarChar(100)
+  price         Decimal      @db.Decimal(10, 2)
   image         String?
-  black_friday  Boolean?
+  black_friday  Boolean
   discount      Decimal?     @db.Decimal(5, 2)
   average_score Decimal?     @db.Decimal(3, 2)
-  description   String?
-  color_id      Int?
-  storage_id    Int?
-  categorie_id  Int?
-  ean           String?      @db.VarChar(13)
+  description   String
+  color_id      Int
+  storage_id    Int
+  categorie_id  Int
+  ean           String       @db.VarChar(13)
   order_items   Order_item[]
-  categories    Categorie?   @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categorie")
-  colors        Color?       @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_color")
-  storages      Storage?     @relation(fields: [storage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage")
+  categories    Categorie    @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categorie")
+  colors        Color        @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_color")
+  storages      Storage      @relation(fields: [storage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage")
   ratings       Rating[]
   stocks        Stock[]
 
@@ -89,26 +89,27 @@ model Product {
 
 model Rating {
   id         Int      @id @default(autoincrement())
-  user_id    Int?
-  product_id Int?
+  user_id    Int
+  product_id Int
   score      Decimal? @db.Decimal(3, 2)
+  feedback   String?
   quantity   Int?
-  products   Product? @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
-  users      User?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
+  products   Product  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
+  users      User     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
 
   @@map("ratings")
 }
 
 model Stock {
   id             Int       @id @default(autoincrement())
-  product_id     Int?
-  status         String?   @db.VarChar(100)
-  purchase_price Decimal?  @db.Decimal(10, 2)
+  product_id     Int
+  status         String    @db.VarChar(100)
+  purchase_price Decimal   @db.Decimal(10, 2)
   expiry_date    DateTime? @db.Date
-  created_at     DateTime? @db.Timestamp(6)
-  updated_at     DateTime? @db.Timestamp(6)
-  quantity       Int?
-  products       Product?  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
+  created_at     DateTime  @db.Timestamp(6)
+  updated_at     DateTime  @db.Timestamp(6)
+  quantity       Int
+  products       Product   @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
 
   @@unique(fields: [product_id])
   @@map("stocks")
@@ -116,7 +117,7 @@ model Stock {
 
 model Storage {
   id       Int       @id @default(autoincrement())
-  capacity Int?
+  capacity Int
   products Product[]
 
   @@unique(fields: [capacity])
@@ -126,18 +127,18 @@ model Storage {
 model User {
   id            Int       @id @default(autoincrement())
   email         String    @db.VarChar(255)
-  password_hash String    @db.VarChar(255)
-  cpf           String?   @db.VarChar(14)
-  cellphone     String?   @db.VarChar(15)
-  first_name    String?   @db.VarChar(50)
-  last_name     String?   @db.VarChar(50)
-  date_birth    DateTime? @db.Date
-  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  password_hash String    @db.VarChar(14)
+  cpf           String    @db.VarChar(14)
+  cellphone     String    @db.VarChar(15)
+  first_name    String    @db.VarChar(50)
+  last_name     String    @db.VarChar(50)
+  date_birth    DateTime  @db.Date
+  created_at    DateTime  @db.Timestamp(6)
   last_login    DateTime? @db.Timestamp(6)
-  admin_auth    Boolean?
+  admin_auth    Boolean
+  addresses     Address[]
   orders        Order[]
   ratings       Rating[]
-  Address       Address[]
 
   @@unique(fields: [email])
   @@map("users")
