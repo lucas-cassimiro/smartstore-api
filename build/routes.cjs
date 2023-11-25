@@ -5,8 +5,9 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __commonJS = (cb, mod) => function __require() {
-  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
 };
 var __copyProps = (to, from, except, desc) => {
   if (from && typeof from === "object" || typeof from === "function") {
@@ -24,131 +25,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
-
-// node_modules/dotenv/lib/main.js
-var require_main = __commonJS({
-  "node_modules/dotenv/lib/main.js"(exports, module2) {
-    "use strict";
-    var fs = require("fs");
-    var path = require("path");
-    function log(message) {
-      console.log(`[dotenv][DEBUG] ${message}`);
-    }
-    var NEWLINE = "\n";
-    var RE_INI_KEY_VAL = /^\s*([\w.-]+)\s*=\s*(.*)?\s*$/;
-    var RE_NEWLINES = /\\n/g;
-    var NEWLINES_MATCH = /\n|\r|\r\n/;
-    function parse(src, options) {
-      const debug = Boolean(options && options.debug);
-      const obj = {};
-      src.toString().split(NEWLINES_MATCH).forEach(function(line, idx) {
-        const keyValueArr = line.match(RE_INI_KEY_VAL);
-        if (keyValueArr != null) {
-          const key = keyValueArr[1];
-          let val = keyValueArr[2] || "";
-          const end = val.length - 1;
-          const isDoubleQuoted = val[0] === '"' && val[end] === '"';
-          const isSingleQuoted = val[0] === "'" && val[end] === "'";
-          if (isSingleQuoted || isDoubleQuoted) {
-            val = val.substring(1, end);
-            if (isDoubleQuoted) {
-              val = val.replace(RE_NEWLINES, NEWLINE);
-            }
-          } else {
-            val = val.trim();
-          }
-          obj[key] = val;
-        } else if (debug) {
-          log(`did not match key and value when parsing line ${idx + 1}: ${line}`);
-        }
-      });
-      return obj;
-    }
-    function config(options) {
-      let dotenvPath = path.resolve(process.cwd(), ".env");
-      let encoding = "utf8";
-      let debug = false;
-      if (options) {
-        if (options.path != null) {
-          dotenvPath = options.path;
-        }
-        if (options.encoding != null) {
-          encoding = options.encoding;
-        }
-        if (options.debug != null) {
-          debug = true;
-        }
-      }
-      try {
-        const parsed = parse(fs.readFileSync(dotenvPath, { encoding }), { debug });
-        Object.keys(parsed).forEach(function(key) {
-          if (!Object.prototype.hasOwnProperty.call(process.env, key)) {
-            process.env[key] = parsed[key];
-          } else if (debug) {
-            log(`"${key}" is already defined in \`process.env\` and will not be overwritten`);
-          }
-        });
-        return { parsed };
-      } catch (e) {
-        return { error: e };
-      }
-    }
-    module2.exports.config = config;
-    module2.exports.parse = parse;
-  }
-});
-
-// node_modules/dotenv/lib/env-options.js
-var require_env_options = __commonJS({
-  "node_modules/dotenv/lib/env-options.js"(exports, module2) {
-    "use strict";
-    var options = {};
-    if (process.env.DOTENV_CONFIG_ENCODING != null) {
-      options.encoding = process.env.DOTENV_CONFIG_ENCODING;
-    }
-    if (process.env.DOTENV_CONFIG_PATH != null) {
-      options.path = process.env.DOTENV_CONFIG_PATH;
-    }
-    if (process.env.DOTENV_CONFIG_DEBUG != null) {
-      options.debug = process.env.DOTENV_CONFIG_DEBUG;
-    }
-    module2.exports = options;
-  }
-});
-
-// node_modules/dotenv/lib/cli-options.js
-var require_cli_options = __commonJS({
-  "node_modules/dotenv/lib/cli-options.js"(exports, module2) {
-    "use strict";
-    var re = /^dotenv_config_(encoding|path|debug)=(.+)$/;
-    module2.exports = function optionMatcher(args) {
-      return args.reduce(function(acc, cur) {
-        const matches = cur.match(re);
-        if (matches) {
-          acc[matches[1]] = matches[2];
-        }
-        return acc;
-      }, {});
-    };
-  }
-});
-
-// node_modules/dotenv/config.js
-(function() {
-  require_main().config(
-    Object.assign(
-      {},
-      require_env_options(),
-      require_cli_options()(process.argv)
-    )
-  );
-})();
-
-// src/app.ts
-var import_express2 = __toESM(require("express"), 1);
-var import_cors = __toESM(require("cors"), 1);
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
 // src/routes.ts
+var routes_exports = {};
+__export(routes_exports, {
+  default: () => routes_default
+});
+module.exports = __toCommonJS(routes_exports);
 var import_express = require("express");
 
 // src/middlewares/multerProducts.ts
@@ -930,28 +814,3 @@ routes.post("/usuarios", new UserController().create);
 routes.post("/usuarios/login", new UserController().login);
 routes.put("/usuarios/:id", new UserController().update);
 var routes_default = routes;
-
-// src/app.ts
-var App = class {
-  server;
-  constructor() {
-    this.server = (0, import_express2.default)();
-    this.middlewares();
-    this.routes();
-  }
-  middlewares() {
-    this.server.use(import_express2.default.json());
-    this.server.use((0, import_cors.default)());
-    this.server.use(import_express2.default.urlencoded({ extended: false }));
-  }
-  routes() {
-    this.server.use(routes_default);
-  }
-};
-var app_default = new App().server;
-
-// src/server.ts
-var port = 3333;
-app_default.listen(port, () => {
-  console.log(`Servidor em execu\xE7\xE3o na porta ${port}`);
-});

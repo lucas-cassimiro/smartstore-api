@@ -2,7 +2,7 @@
   "name": "smartstore-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
     "dev": "npx tsx watch src/server.ts",
     "start": "node build/server.cjs",
