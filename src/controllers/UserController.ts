@@ -5,20 +5,17 @@ import jwt from "jsonwebtoken";
 
 import { Request, Response } from "express";
 import "../utils/user/userUtils";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 //import findExistentItem from "../utils/index/findExistentItem";
 
 export type userProps = {
-  id: number;
   email: string;
   password_hash: string;
   cpf: string;
   cellphone: string;
   first_name: string;
   last_name: string;
-  date_birth: Date;
-  created_at: Date;
-  last_login: Date | null;
-  admin_auth: boolean;
+  date_birth: Date | string;
 };
 
 export class UserController {
@@ -29,7 +26,15 @@ export class UserController {
 
     async create(req: Request, res: Response) {
         try {
-            const { email } = req.body as userProps;
+            const {
+                email,
+                password_hash,
+                cpf,
+                cellphone,
+                first_name,
+                last_name,
+                date_birth,
+            } = req.body as userProps;
 
             const user = await prisma.user.findUnique({
                 where: {
@@ -41,27 +46,39 @@ export class UserController {
 
             if (user) {
                 return res.status(404).json({ message: "Email já cadastrado." });
-            } else {
-                const newUser = {
-                    ...(req.body as userProps),
-                    admin_auth: Boolean(false),
-                    created_at: new Date(),
-                    date_birth: new Date(req.body.date_birth),
-                };
-
-                const hash = bcrypt.hashSync(newUser.password_hash, 10);
-
-                newUser.password_hash = hash;
-
-                await prisma.user.create({
-                    data: newUser,
-                });
-
-                return res.status(201).json({ message: "Usuário criado com sucesso!" });
             }
+            const newUser = {
+                email,
+                password_hash,
+                cpf,
+                cellphone,
+                first_name,
+                last_name,
+                date_birth: new Date(date_birth),
+                admin_auth: Boolean(false),
+                created_at: new Date(),
+                last_login: new Date(),
+            };
+
+            const hash = bcrypt.hashSync(newUser.password_hash, 10);
+
+            newUser.password_hash = hash;
+
+            await prisma.user.create({
+                data: newUser,
+            });
+
+            return res.status(201).json({ message: "Usuário criado com sucesso!" });
         } catch (error) {
-            console.log(error);
-            return res.status(500).send({ message: "Erro ao cadastrar usuário" });
+            if (error instanceof PrismaClientKnownRequestError) {
+                console.error("Prisma Error:", {
+                    code: error.code,
+                    clientVersion: error.clientVersion,
+                    meta: error.meta,
+                });
+            } else {
+                console.error("Erro desconhecido:", error);
+            }
         }
     }
 
