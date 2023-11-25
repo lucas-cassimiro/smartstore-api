@@ -76,6 +76,7 @@ var authMiddleware = async (req, res, next) => {
 // src/controllers/UserController.ts
 var import_bcrypt = __toESM(require("bcrypt"), 1);
 var import_jsonwebtoken2 = __toESM(require("jsonwebtoken"), 1);
+var import_library = require("@prisma/client/runtime/library");
 var UserController = class {
   async getUsers(req, res) {
     const users = await clientPrisma_default.user.findMany({});
@@ -83,7 +84,15 @@ var UserController = class {
   }
   async create(req, res) {
     try {
-      const { email } = req.body;
+      const {
+        email,
+        password_hash,
+        cpf,
+        cellphone,
+        first_name,
+        last_name,
+        date_birth
+      } = req.body;
       const user = await clientPrisma_default.user.findUnique({
         where: {
           email
@@ -91,23 +100,35 @@ var UserController = class {
       });
       if (user) {
         return res.status(404).json({ message: "Email j\xE1 cadastrado." });
-      } else {
-        const newUser = {
-          ...req.body,
-          admin_auth: Boolean(false),
-          created_at: /* @__PURE__ */ new Date(),
-          date_birth: new Date(req.body.date_birth)
-        };
-        const hash = import_bcrypt.default.hashSync(newUser.password_hash, 10);
-        newUser.password_hash = hash;
-        await clientPrisma_default.user.create({
-          data: newUser
-        });
-        return res.status(201).json({ message: "Usu\xE1rio criado com sucesso!" });
       }
+      const newUser = {
+        email,
+        password_hash,
+        cpf,
+        cellphone,
+        first_name,
+        last_name,
+        date_birth: new Date(date_birth),
+        admin_auth: Boolean(false),
+        created_at: /* @__PURE__ */ new Date(),
+        last_login: /* @__PURE__ */ new Date()
+      };
+      const hash = import_bcrypt.default.hashSync(newUser.password_hash, 10);
+      newUser.password_hash = hash;
+      await clientPrisma_default.user.create({
+        data: newUser
+      });
+      return res.status(201).json({ message: "Usu\xE1rio criado com sucesso!" });
     } catch (error) {
-      console.log(error);
-      return res.status(500).send({ message: "Erro ao cadastrar usu\xE1rio" });
+      if (error instanceof import_library.PrismaClientKnownRequestError) {
+        console.error("Prisma Error:", {
+          code: error.code,
+          clientVersion: error.clientVersion,
+          meta: error.meta
+        });
+      } else {
+        console.error("Erro desconhecido:", error);
+      }
     }
   }
   async edit(req, res) {
