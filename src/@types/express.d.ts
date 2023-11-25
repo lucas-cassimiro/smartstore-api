@@ -1,4 +1,4 @@
-import { userProps } from "../controllers/UserController";
+import { userProps } from "../app/controllers/UsersController";
 
 declare global {
   namespace Express {
