@@ -1,8 +1,8 @@
 import express from "express";
 
-import { Request, Response, NextFunction } from "express";
+import cors from "cors";
 
-import"dotenv/config";
+import "dotenv/config";
 
 import routerUser from "./routes/users";
 import routerProducts from "./routes/products";
@@ -18,15 +18,7 @@ import routerCategories from "./routes/categories";
 const port = 3001;
 const app = express();
 
-app.use((_req: Request, res: Response, next: NextFunction) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-    res.header("Access-Control-Allow-Credentials", "true");
-    next();
-});
-
+app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
