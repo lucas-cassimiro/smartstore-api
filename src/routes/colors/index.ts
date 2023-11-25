@@ -1,6 +1,6 @@
 import express from "express";
 
-import { ColorController } from "../../controllers/ColorController";
+import { ColorController } from "../../controllers/colorController";
 
 const colorRoutes = express.Router();
 

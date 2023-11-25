@@ -1,6 +1,6 @@
 import express from "express";
 
-import { ProductController } from "../../controllers/ProductController";
+import { ProductController } from "../../controllers/productController";
 
 import upload from "../../middleware/multerProductImages";
 

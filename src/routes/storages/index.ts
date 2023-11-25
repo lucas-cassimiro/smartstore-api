@@ -1,6 +1,6 @@
 import express from "express";
 
-import { StorageController } from "../../controllers/StorageController";
+import { StorageController } from "../../controllers/storageController";
 
 const storageRoutes = express.Router();
 

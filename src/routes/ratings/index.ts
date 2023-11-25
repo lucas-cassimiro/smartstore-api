@@ -1,6 +1,6 @@
 import express from "express";
 
-import { RatingController } from "../../controllers/RatingController";
+import { RatingController } from "../../controllers/ratingController";
 
 const ratingRoutes = express.Router();
 
