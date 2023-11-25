@@ -10,7 +10,7 @@ type AddressType = {
   neighborhood: string;
   city: string;
   state: string;
-  recipient: string;
+  recipient: string
 };
 
 export class AddressController {
