@@ -5,8 +5,8 @@
   "main": "server.ts",
   "scripts": {
     "dev": "npx tsx watch src/server.ts",
-    "start": "node build/server.cjs",
-    "build": "tsup src --out-dir build"
+    "start": "node dist/server.cjs",
+    "build": "tsup src dist"
   },
   "keywords": [],
   "author": "",
