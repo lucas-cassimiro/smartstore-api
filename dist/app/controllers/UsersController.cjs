@@ -44,9 +44,9 @@ var import_bcrypt = __toESM(require("bcrypt"), 1);
 var import_jsonwebtoken = __toESM(require("jsonwebtoken"), 1);
 var import_library = require("@prisma/client/runtime/library");
 var UserController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const users = await clientPrisma_default.user.findMany({});
-    res.json(users);
+    return res.json(users);
   }
   async create(req, res) {
     try {
@@ -148,14 +148,12 @@ var UserController = class {
         password_hash,
         findUser.password_hash
       );
-      console.log("verifyPass:", verifyPass);
       if (!verifyPass) {
         return res.status(400).send({ message: "E-mail ou senha inv\xE1lidos." });
       }
       const token = import_jsonwebtoken.default.sign({ data: findUser }, process.env.JWT_PASS ?? "", {
         expiresIn: "8h"
       });
-      console.log(token);
       const { password_hash: _, ...userLogin } = findUser;
       return res.status(200).json({
         user: userLogin,

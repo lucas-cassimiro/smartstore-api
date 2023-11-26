@@ -31,9 +31,9 @@ var clientPrisma_default = prisma;
 
 // src/app/controllers/StoragesController.ts
 var StorageController = class {
-  async index(req, res) {
-    const storages = await clientPrisma_default.storage.findMany({});
-    res.json(storages);
+  async index(_req, res) {
+    const storages = await clientPrisma_default.storage.findMany();
+    return res.json(storages);
   }
   async create(req, res) {
     const { capacity } = req.body;

@@ -31,14 +31,14 @@ var clientPrisma_default = prisma;
 
 // src/app/controllers/OrderItemsController.ts
 var OrderItemsController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const orderItems = await clientPrisma_default.order_item.findMany({
       include: {
         products: true,
         orders: true
       }
     });
-    res.json(orderItems);
+    return res.json(orderItems);
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

@@ -31,9 +31,9 @@ var clientPrisma_default = prisma;
 
 // src/app/controllers/CategoriesController.ts
 var CategorieController = class {
-  async index(req, res) {
-    const categories = await clientPrisma_default.categorie.findMany({});
-    res.json(categories);
+  async index(_req, res) {
+    const categories = await clientPrisma_default.categorie.findMany();
+    return res.json(categories);
   }
   async create(req, res) {
     const { name } = req.body;
@@ -56,13 +56,13 @@ var CategorieController = class {
     } catch (error) {
       return res.status(404).send({ message: "Erro ao cadastrar nova categoria de produtos" });
     }
-    res.status(200).send({
+    return res.status(200).send({
       message: "Nova categoria de produtos cadastrada na base de dados"
     });
   }
   async update(req, res) {
+    const id = Number(req.params.id);
     const { name } = req.body;
-    const { id } = req.body;
     try {
       const categorieExistentInDatabase = await clientPrisma_default.categorie.findUnique({
         where: {

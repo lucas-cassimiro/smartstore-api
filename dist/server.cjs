@@ -261,9 +261,9 @@ var AddressController = class {
 
 // src/app/controllers/CategoriesController.ts
 var CategorieController = class {
-  async index(req, res) {
-    const categories = await clientPrisma_default.categorie.findMany({});
-    res.json(categories);
+  async index(_req, res) {
+    const categories = await clientPrisma_default.categorie.findMany();
+    return res.json(categories);
   }
   async create(req, res) {
     const { name } = req.body;
@@ -286,13 +286,13 @@ var CategorieController = class {
     } catch (error) {
       return res.status(404).send({ message: "Erro ao cadastrar nova categoria de produtos" });
     }
-    res.status(200).send({
+    return res.status(200).send({
       message: "Nova categoria de produtos cadastrada na base de dados"
     });
   }
   async update(req, res) {
+    const id = Number(req.params.id);
     const { name } = req.body;
-    const { id } = req.body;
     try {
       const categorieExistentInDatabase = await clientPrisma_default.categorie.findUnique({
         where: {
@@ -323,9 +323,9 @@ var CategorieController = class {
 
 // src/app/controllers/ColorsController.ts
 var ColorController = class {
-  async index(req, res) {
-    const colors = await clientPrisma_default.color.findMany({});
-    res.json(colors);
+  async index(_req, res) {
+    const colors = await clientPrisma_default.color.findMany();
+    return res.json(colors);
   }
   async create(req, res) {
     const { name } = req.body;
@@ -347,7 +347,7 @@ var ColorController = class {
       console.log(error);
       return res.status(404).send({ message: "Falha ao cadastrar nova cor " });
     }
-    res.status(200).send({ message: "Nova cor cadastrada na base de dados " });
+    return res.status(200).send({ message: "Nova cor cadastrada na base de dados " });
   }
   async update(req, res) {
     const id = Number(req.params.id);
@@ -373,20 +373,20 @@ var ColorController = class {
       console.log(error);
       return res.status(404).send({ message: "Falha ao cadastrar nova cor" });
     }
-    res.status(200).send({ message: "Cor alterada na base de dados " });
+    return res.status(200).send({ message: "Cor alterada na base de dados " });
   }
 };
 
 // src/app/controllers/OrderItemsController.ts
 var OrderItemsController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const orderItems = await clientPrisma_default.order_item.findMany({
       include: {
         products: true,
         orders: true
       }
     });
-    res.json(orderItems);
+    return res.json(orderItems);
   }
 };
 
@@ -403,7 +403,7 @@ async function findByEAN(nameSearch) {
 
 // src/app/controllers/ProductsController.ts
 var ProductController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const products = await clientPrisma_default.product.findMany({
       include: {
         categories: true,
@@ -411,7 +411,7 @@ var ProductController = class {
         storages: true
       }
     });
-    res.json(products);
+    return res.json(products);
   }
   async show(req, res) {
     const param = req.params.param;
@@ -437,7 +437,7 @@ var ProductController = class {
             id
           }
         });
-        res.status(200).send(products);
+        return res.status(200).send(products);
       } else {
         const products = await clientPrisma_default.product.findMany({
           include: {
@@ -457,7 +457,7 @@ var ProductController = class {
         if (products.length === 0) {
           return res.status(404).send({ message: "Categoria n\xE3o encontrada" });
         }
-        res.status(200).send(products);
+        return res.status(200).send(products);
       }
     } catch (error) {
       return res.status(500).send({ message: "Falha na consulta de produtos" });
@@ -471,7 +471,6 @@ var ProductController = class {
       discount,
       average_score,
       description,
-      created_at,
       color_id,
       storage_id,
       categorie_id,
@@ -482,7 +481,6 @@ var ProductController = class {
       ean
     } = req.body;
     const img = req.file?.filename;
-    console.log(img);
     try {
       const productWithSameEAN = await findByEAN(ean);
       if (productWithSameEAN) {
@@ -498,7 +496,7 @@ var ProductController = class {
           data: {
             quantity: existentInStock[0].quantity + Number(quantity),
             purchase_price,
-            updated_at: new Date(created_at)
+            updated_at: /* @__PURE__ */ new Date()
           }
         });
         return res.status(200).send({
@@ -528,9 +526,9 @@ var ProductController = class {
                 product_id,
                 status,
                 purchase_price,
-                expiry_date: new Date(expiry_date),
-                created_at: new Date(created_at),
-                updated_at: new Date(created_at),
+                expiry_date: expiry_date !== void 0 ? new Date(expiry_date) : void 0,
+                created_at: /* @__PURE__ */ new Date(),
+                updated_at: /* @__PURE__ */ new Date(),
                 quantity: Number(quantity)
               }
             });
@@ -632,37 +630,38 @@ var ProductController = class {
 
 // src/app/controllers/RatingsController.ts
 var RatingController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const ratings = await clientPrisma_default.rating.findMany({
       include: {
         products: true,
         users: true
       }
     });
-    res.json(ratings);
+    return res.json(ratings);
   }
   async create(req, res) {
-    const { user_id, product_id, score } = req.body;
+    const { user_id, product_id, score, feedback } = req.body;
     try {
       await clientPrisma_default.rating.create({
         data: {
           user_id,
           product_id,
           score,
+          feedback,
           quantity: 1
         }
       });
     } catch (error) {
-      return res.status(500).send({ message: "Falha ao registrar a avalia\xE7\xE3o" });
+      return res.status(500).send({ message: "Falha ao registrar a avalia\xE7\xE3o." });
     }
-    res.status(200).send({ message: "Avalia\xE7\xE3o registrada no banco de dados" });
+    res.status(200).send({ message: "Avalia\xE7\xE3o registrada no banco de dados." });
   }
   // async update (req: Request, res: Response) { },
 };
 
 // src/app/controllers/StocksController.ts
 var StockController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const productsInStock = await clientPrisma_default.stock.findMany({
       include: {
         products: {
@@ -674,7 +673,7 @@ var StockController = class {
         }
       }
     });
-    res.json(productsInStock);
+    return res.json(productsInStock);
   }
   async update(req, res) {
     const product_id = Number(req.params.id);
@@ -696,7 +695,7 @@ var StockController = class {
         data: {
           status,
           purchase_price,
-          expiry_date: new Date(expiry_date),
+          expiry_date: expiry_date !== void 0 ? new Date(expiry_date) : void 0,
           updated_at: new Date(updated_at),
           quantity: quantidadeAtual + Number(quantity)
         }
@@ -711,9 +710,9 @@ var StockController = class {
 
 // src/app/controllers/StoragesController.ts
 var StorageController = class {
-  async index(req, res) {
-    const storages = await clientPrisma_default.storage.findMany({});
-    res.json(storages);
+  async index(_req, res) {
+    const storages = await clientPrisma_default.storage.findMany();
+    return res.json(storages);
   }
   async create(req, res) {
     const { capacity } = req.body;
@@ -774,9 +773,9 @@ var import_bcrypt = __toESM(require("bcrypt"), 1);
 var import_jsonwebtoken2 = __toESM(require("jsonwebtoken"), 1);
 var import_library = require("@prisma/client/runtime/library");
 var UserController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const users = await clientPrisma_default.user.findMany({});
-    res.json(users);
+    return res.json(users);
   }
   async create(req, res) {
     try {
@@ -878,14 +877,12 @@ var UserController = class {
         password_hash,
         findUser.password_hash
       );
-      console.log("verifyPass:", verifyPass);
       if (!verifyPass) {
         return res.status(400).send({ message: "E-mail ou senha inv\xE1lidos." });
       }
       const token = import_jsonwebtoken2.default.sign({ data: findUser }, process.env.JWT_PASS ?? "", {
         expiresIn: "8h"
       });
-      console.log(token);
       const { password_hash: _, ...userLogin } = findUser;
       return res.status(200).json({
         user: userLogin,

@@ -31,9 +31,9 @@ var clientPrisma_default = prisma;
 
 // src/app/controllers/ColorsController.ts
 var ColorController = class {
-  async index(req, res) {
-    const colors = await clientPrisma_default.color.findMany({});
-    res.json(colors);
+  async index(_req, res) {
+    const colors = await clientPrisma_default.color.findMany();
+    return res.json(colors);
   }
   async create(req, res) {
     const { name } = req.body;
@@ -55,7 +55,7 @@ var ColorController = class {
       console.log(error);
       return res.status(404).send({ message: "Falha ao cadastrar nova cor " });
     }
-    res.status(200).send({ message: "Nova cor cadastrada na base de dados " });
+    return res.status(200).send({ message: "Nova cor cadastrada na base de dados " });
   }
   async update(req, res) {
     const id = Number(req.params.id);
@@ -81,7 +81,7 @@ var ColorController = class {
       console.log(error);
       return res.status(404).send({ message: "Falha ao cadastrar nova cor" });
     }
-    res.status(200).send({ message: "Cor alterada na base de dados " });
+    return res.status(200).send({ message: "Cor alterada na base de dados " });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

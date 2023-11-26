@@ -31,7 +31,7 @@ var clientPrisma_default = prisma;
 
 // src/app/controllers/StocksController.ts
 var StockController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const productsInStock = await clientPrisma_default.stock.findMany({
       include: {
         products: {
@@ -43,7 +43,7 @@ var StockController = class {
         }
       }
     });
-    res.json(productsInStock);
+    return res.json(productsInStock);
   }
   async update(req, res) {
     const product_id = Number(req.params.id);
@@ -65,7 +65,7 @@ var StockController = class {
         data: {
           status,
           purchase_price,
-          expiry_date: new Date(expiry_date),
+          expiry_date: expiry_date !== void 0 ? new Date(expiry_date) : void 0,
           updated_at: new Date(updated_at),
           quantity: quantidadeAtual + Number(quantity)
         }

@@ -31,30 +31,31 @@ var clientPrisma_default = prisma;
 
 // src/app/controllers/RatingsController.ts
 var RatingController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const ratings = await clientPrisma_default.rating.findMany({
       include: {
         products: true,
         users: true
       }
     });
-    res.json(ratings);
+    return res.json(ratings);
   }
   async create(req, res) {
-    const { user_id, product_id, score } = req.body;
+    const { user_id, product_id, score, feedback } = req.body;
     try {
       await clientPrisma_default.rating.create({
         data: {
           user_id,
           product_id,
           score,
+          feedback,
           quantity: 1
         }
       });
     } catch (error) {
-      return res.status(500).send({ message: "Falha ao registrar a avalia\xE7\xE3o" });
+      return res.status(500).send({ message: "Falha ao registrar a avalia\xE7\xE3o." });
     }
-    res.status(200).send({ message: "Avalia\xE7\xE3o registrada no banco de dados" });
+    res.status(200).send({ message: "Avalia\xE7\xE3o registrada no banco de dados." });
   }
   // async update (req: Request, res: Response) { },
 };

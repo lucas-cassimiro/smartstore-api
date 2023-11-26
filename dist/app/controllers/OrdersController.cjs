@@ -62,13 +62,17 @@ async function removeQuantityInStock(userOrder) {
 
 // src/app/controllers/OrdersController.ts
 var OrderController = class {
-  async index(req, res) {
-    const orders = await clientPrisma_default.order.findMany({
-      include: {
-        users: true
-      }
-    });
-    res.json(orders);
+  async index(_req, res) {
+    try {
+      const orders = await clientPrisma_default.order.findMany({
+        include: {
+          users: true
+        }
+      });
+      return res.json(orders);
+    } catch (error) {
+      return res.status(500).send({ message: "Erro ao buscar os pedidos." });
+    }
   }
   async show(req, res) {
     const id = Number(req.params.id);
@@ -77,7 +81,7 @@ var OrderController = class {
         user_id: id
       }
     });
-    res.json(orders);
+    return res.json(orders);
   }
   async create(req, res) {
     const { user_id, user_order } = req.body;

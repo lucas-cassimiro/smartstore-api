@@ -42,7 +42,7 @@ async function findByEAN(nameSearch) {
 
 // src/app/controllers/ProductsController.ts
 var ProductController = class {
-  async index(req, res) {
+  async index(_req, res) {
     const products = await clientPrisma_default.product.findMany({
       include: {
         categories: true,
@@ -50,7 +50,7 @@ var ProductController = class {
         storages: true
       }
     });
-    res.json(products);
+    return res.json(products);
   }
   async show(req, res) {
     const param = req.params.param;
@@ -76,7 +76,7 @@ var ProductController = class {
             id
           }
         });
-        res.status(200).send(products);
+        return res.status(200).send(products);
       } else {
         const products = await clientPrisma_default.product.findMany({
           include: {
@@ -96,7 +96,7 @@ var ProductController = class {
         if (products.length === 0) {
           return res.status(404).send({ message: "Categoria n\xE3o encontrada" });
         }
-        res.status(200).send(products);
+        return res.status(200).send(products);
       }
     } catch (error) {
       return res.status(500).send({ message: "Falha na consulta de produtos" });
@@ -110,7 +110,6 @@ var ProductController = class {
       discount,
       average_score,
       description,
-      created_at,
       color_id,
       storage_id,
       categorie_id,
@@ -121,7 +120,6 @@ var ProductController = class {
       ean
     } = req.body;
     const img = req.file?.filename;
-    console.log(img);
     try {
       const productWithSameEAN = await findByEAN(ean);
       if (productWithSameEAN) {
@@ -137,7 +135,7 @@ var ProductController = class {
           data: {
             quantity: existentInStock[0].quantity + Number(quantity),
             purchase_price,
-            updated_at: new Date(created_at)
+            updated_at: /* @__PURE__ */ new Date()
           }
         });
         return res.status(200).send({
@@ -167,9 +165,9 @@ var ProductController = class {
                 product_id,
                 status,
                 purchase_price,
-                expiry_date: new Date(expiry_date),
-                created_at: new Date(created_at),
-                updated_at: new Date(created_at),
+                expiry_date: expiry_date !== void 0 ? new Date(expiry_date) : void 0,
+                created_at: /* @__PURE__ */ new Date(),
+                updated_at: /* @__PURE__ */ new Date(),
                 quantity: Number(quantity)
               }
             });
