@@ -1,15 +1,16 @@
 import prisma from "../../../config/clientPrisma";
 
 import { Request, Response } from "express";
+import { ColorData } from "../../interfaces/ColorData";
 
 export class ColorController {
-    async index(req: Request, res: Response) {
-        const colors = await prisma.color.findMany({});
-        res.json(colors);
+    async index(_req: Request, res: Response) {
+        const colors = await prisma.color.findMany();
+        return res.json(colors);
     }
 
     async create(req: Request, res: Response) {
-        const { name } = req.body;
+        const { name } = req.body as ColorData;
 
         try {
             const colorExistentInDatabase = await prisma.color.findFirst({
@@ -34,12 +35,12 @@ export class ColorController {
             return res.status(404).send({ message: "Falha ao cadastrar nova cor " });
         }
 
-        res.status(200).send({ message: "Nova cor cadastrada na base de dados " });
+        return res.status(200).send({ message: "Nova cor cadastrada na base de dados " });
     }
 
     async update(req: Request, res: Response) {
-        const id = Number(req.params.id);
-        const { name } = req.body;
+        const id: number = Number(req.params.id);
+        const { name } = req.body as ColorData;
 
         try {
             const colorExistentInDatabase = await prisma.color.findUnique({
@@ -67,6 +68,6 @@ export class ColorController {
             return res.status(404).send({ message: "Falha ao cadastrar nova cor" });
         }
 
-        res.status(200).send({ message: "Cor alterada na base de dados " });
+        return res.status(200).send({ message: "Cor alterada na base de dados " });
     }
 }
