@@ -2,16 +2,7 @@ import { Request, Response } from "express";
 
 import prisma from "../../../config/clientPrisma";
 
-type AddressType = {
-  user_id: number;
-  street_address: string;
-  number_address: number;
-  complement: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  recipient: string
-};
+import { AddressData } from "../../interfaces/AddressData";
 
 export class AddressController {
     async show(req: Request, res: Response) {
@@ -56,7 +47,7 @@ export class AddressController {
             city,
             state,
             recipient,
-        } = req.body as AddressType;
+        } = req.body as AddressData;
 
         try {
             await prisma.address.create({
