@@ -2,18 +2,16 @@ import prisma from "../../../config/clientPrisma";
 
 import { Request, Response } from "express";
 
-interface Storage {
-  capacity: number;
-}
+import { StorageData } from "../../interfaces/StorageData";
 
 export class StorageController {
-    async index(req: Request, res: Response) {
-        const storages = await prisma.storage.findMany({});
-        res.json(storages);
+    async index(_req: Request, res: Response) {
+        const storages = await prisma.storage.findMany();
+        return res.json(storages);
     }
 
     async create(req: Request, res: Response) {
-        const { capacity } = req.body as Storage;
+        const { capacity } = req.body as StorageData;
 
         try {
             const storageExistentInDatabase = await prisma.storage.findUnique({
@@ -46,9 +44,9 @@ export class StorageController {
     }
 
     async update(req: Request, res: Response) {
-        const id = Number(req.params.id);
+        const id: number = Number(req.params.id);
 
-        const { capacity } = req.body;
+        const { capacity } = req.body as StorageData;
 
         try {
             const storageExistentInDatabase = await prisma.storage.findUnique({
