@@ -3,9 +3,10 @@ import prisma from "../../../config/clientPrisma";
 import { Request, Response } from "express";
 
 import findByEAN from "../../utils/product/productUtils";
+import { ProductData } from "../../interfaces/ProductData";
 
 export class ProductController {
-    async index(req: Request, res: Response) {
+    async index(_req: Request, res: Response) {
         const products = await prisma.product.findMany({
             include: {
                 categories: true,
@@ -14,14 +15,14 @@ export class ProductController {
             },
         });
 
-        res.json(products);
+        return res.json(products);
     }
 
     async show(req: Request, res: Response) {
         const param = req.params.param;
 
         try {
-            const numericParam = Number(param);
+            const numericParam: number = Number(param);
 
             if (!isNaN(numericParam)) {
                 const id = Number(param);
@@ -46,7 +47,7 @@ export class ProductController {
                     },
                 });
 
-                res.status(200).send(products);
+                return res.status(200).send(products);
             } else {
                 const products = await prisma.product.findMany({
                     include: {
@@ -67,7 +68,7 @@ export class ProductController {
                 if (products.length === 0) {
                     return res.status(404).send({ message: "Categoria não encontrada" });
                 }
-                res.status(200).send(products);
+                return res.status(200).send(products);
             }
         } catch (error) {
             return res.status(500).send({ message: "Falha na consulta de produtos" });
@@ -82,7 +83,6 @@ export class ProductController {
             discount,
             average_score,
             description,
-            created_at,
             color_id,
             storage_id,
             categorie_id,
@@ -91,11 +91,9 @@ export class ProductController {
             purchase_price,
             expiry_date,
             ean,
-        } = req.body;
+        } = req.body as ProductData;
 
         const img = req.file?.filename;
-
-        console.log(img);
 
         try {
             const productWithSameEAN = await findByEAN(ean);
@@ -112,9 +110,9 @@ export class ProductController {
                         id: existentInStock[0].id,
                     },
                     data: {
-                        quantity: existentInStock[0].quantity! + Number(quantity),
+                        quantity: existentInStock[0].quantity + Number(quantity),
                         purchase_price,
-                        updated_at: new Date(created_at),
+                        updated_at: new Date(),
                     },
                 });
 
@@ -141,15 +139,17 @@ export class ProductController {
                             },
                         });
 
-                        const product_id = createdProduct.id;
+                        const product_id: number = createdProduct.id;
+
                         const createdStock = await prisma.stock.create({
                             data: {
                                 product_id,
                                 status,
                                 purchase_price,
-                                expiry_date: new Date(expiry_date),
-                                created_at: new Date(created_at),
-                                updated_at: new Date(created_at),
+                                expiry_date:
+                  expiry_date !== undefined ? new Date(expiry_date) : undefined,
+                                created_at: new Date(),
+                                updated_at: new Date(),
                                 quantity: Number(quantity),
                             },
                         });
@@ -173,7 +173,7 @@ export class ProductController {
     }
 
     async destroy(req: Request, res: Response) {
-        const id = Number(req.params.id);
+        const id: number = Number(req.params.id);
         try {
             const productExistent = await prisma.product.findUnique({
                 where: {
@@ -187,7 +187,7 @@ export class ProductController {
                     .send({ message: "Produto não consta na base de dados " });
             }
 
-            const product_id = productExistent.id;
+            const product_id: number = productExistent.id;
 
             const deleteProductInStock = prisma.stock.deleteMany({
                 where: {
@@ -223,7 +223,7 @@ export class ProductController {
     }
 
     async update(req: Request, res: Response) {
-        const id = Number(req.params.id);
+        const id: number = Number(req.params.id);
 
         const {
             name,
@@ -235,7 +235,7 @@ export class ProductController {
             storage_id,
             categorie_id,
             ean,
-        } = req.body;
+        } = req.body as ProductData;
 
         const productExistentInDatabase = await prisma.product.findUnique({
             where: {
