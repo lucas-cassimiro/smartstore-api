@@ -2,20 +2,25 @@ import prisma from "../../../config/clientPrisma";
 
 import { Request, Response } from "express";
 import removeQuantityInStock from "../../utils/product/quantityProductUtil";
+import { OrderData } from "../../interfaces/OrderData";
 
 export class OrderController {
-    async index(req: Request, res: Response) {
-        const orders = await prisma.order.findMany({
-            include: {
-                users: true,
-            },
-        });
-
-        res.json(orders);
+    async index(_req: Request, res: Response) {
+        try {
+            const orders = await prisma.order.findMany({
+                include: {
+                    users: true,
+                },
+            });
+            return res.json(orders);
+            
+        } catch (error) {
+            return res.status(500).send({ message: "Erro ao buscar os pedidos." });
+        }
     }
 
     async show(req: Request, res: Response) {
-        const id = Number(req.params.id);
+        const id: number = Number(req.params.id);
 
         //fazer verificações se o usuário existe etc
 
@@ -25,13 +30,13 @@ export class OrderController {
             },
         });
 
-        res.json(orders);
+        return res.json(orders);
     }
 
     async create(req: Request, res: Response) {
-        const { user_id, user_order } = req.body;
+        const { user_id, user_order } = req.body as OrderData;
 
-        let totalAmount = 0;
+        let totalAmount: number = 0;
         const productIds: number[] = [];
 
         for (const element of user_order) {
@@ -42,11 +47,12 @@ export class OrderController {
             });
 
             if (produtinho) {
-                const unitPrice = Number(produtinho.price);
-                const discount = Number(produtinho.discount);
-                const quantity = Number(element.quantity);
+                const unitPrice: number = Number(produtinho.price);
+                const discount: number = Number(produtinho.discount);
+                const quantity: number = Number(element.quantity);
 
-                const totalValue = ((unitPrice * (100 - discount)) / 100) * quantity;
+                const totalValue: number =
+          ((unitPrice * (100 - discount)) / 100) * quantity;
 
                 totalAmount += totalValue;
                 productIds.push(element.product_id);
@@ -63,7 +69,7 @@ export class OrderController {
                     },
                 });
 
-                const orderId = createdItemInOrder.id;
+                const orderId: number = createdItemInOrder.id;
 
                 const createdItemsInOrderItems = await Promise.all(
                     user_order.map(
@@ -75,10 +81,10 @@ export class OrderController {
                             });
 
                             if (produtinho) {
-                                const unitPrice = Number(produtinho.price);
-                                const discount = Number(produtinho.discount);
-                                const quantity = Number(orderItem.quantity);
-                                const totalPrice =
+                                const unitPrice: number = Number(produtinho.price);
+                                const discount: number = Number(produtinho.discount);
+                                const quantity: number = Number(orderItem.quantity);
+                                const totalPrice: number =
                   ((unitPrice * (100 - discount)) / 100) * quantity;
 
                                 return await prisma.order_item.create({
