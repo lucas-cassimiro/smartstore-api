@@ -1,9 +1,10 @@
 import prisma from "../../../config/clientPrisma";
 
 import { Request, Response } from "express";
+import { StockData } from "../../interfaces/StockData";
 
 export class StockController {
-    async index(req: Request, res: Response) {
+    async index(_req: Request, res: Response) {
         const productsInStock = await prisma.stock.findMany({
             include: {
                 products: {
@@ -16,14 +17,14 @@ export class StockController {
             },
         });
 
-        res.json(productsInStock);
+        return res.json(productsInStock);
     }
 
     async update(req: Request, res: Response) {
-        const product_id = Number(req.params.id);
+        const product_id: number = Number(req.params.id);
 
         const { status, purchase_price, expiry_date, updated_at, quantity } =
-      req.body;
+      req.body as StockData;
 
         try {
             const product = await prisma.stock.findUnique({
@@ -38,7 +39,7 @@ export class StockController {
                     .send({ message: "Produto não existe na base de dados" });
             }
 
-            const quantidadeAtual = product.quantity;
+            const quantidadeAtual: number = product.quantity;
 
             await prisma.stock.update({
                 where: {
@@ -47,7 +48,8 @@ export class StockController {
                 data: {
                     status: status,
                     purchase_price: purchase_price,
-                    expiry_date: new Date(expiry_date),
+                    expiry_date:
+            expiry_date !== undefined ? new Date(expiry_date) : undefined,
                     updated_at: new Date(updated_at),
                     quantity: quantidadeAtual! + Number(quantity),
                 },
