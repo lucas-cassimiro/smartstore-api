@@ -1,17 +1,18 @@
 import { Request, Response } from "express";
 
 import prisma from "../../../config/clientPrisma";
+import { CategorieData } from "../../interfaces/CategorieData";
 
 //import findExistentItem from "../utils/index/findExistentItem";
 
 export class CategorieController {
-    async index(req: Request, res: Response) {
-        const categories = await prisma.categorie.findMany({});
-        res.json(categories);
+    async index(_req: Request, res: Response) {
+        const categories = await prisma.categorie.findMany();
+        return res.json(categories);
     }
 
     async create(req: Request, res: Response) {
-        const { name } = req.body;
+        const { name } = req.body as CategorieData;
         try {
             const categorieExistentInDatabase = await prisma.categorie.findUnique({
                 where: {
@@ -38,14 +39,14 @@ export class CategorieController {
                 .send({ message: "Erro ao cadastrar nova categoria de produtos" });
         }
 
-        res.status(200).send({
+        return res.status(200).send({
             message: "Nova categoria de produtos cadastrada na base de dados",
         });
     }
 
     async update(req: Request, res: Response) {
-        const { name } = req.body;
-        const { id } = req.body;
+        const id: number = Number(req.params.id);
+        const { name } = req.body as CategorieData;
 
         try {
             const categorieExistentInDatabase = await prisma.categorie.findUnique({
