@@ -7,21 +7,40 @@ import { ProductData } from "../../interfaces/ProductData";
 
 export class ProductController {
     async index(_req: Request, res: Response) {
-        const products = await prisma.product.findMany({
-            include: {
-                categories: true,
-                colors: true,
-                storages: true,
-            },
-        });
+        try {
+            const products = await prisma.product.findMany({
+                include: {
+                    categories: true,
+                    colors: true,
+                    storages: true,
+                },
+            });
 
-        return res.json(products);
+            return res.json(products);
+        } catch (error) {
+            return res.status(500).send({ message: "Falha ao buscar os produtos." });
+        }
     }
 
     async show(req: Request, res: Response) {
         const param = req.params.param;
 
         try {
+            if (param === "blackfriday") {
+                const products = await prisma.product.findMany({
+                    include: {
+                        colors: true,
+                        storages: true,
+                        categories: true,
+                    },
+                    where: {
+                        black_friday: true,
+                    },
+                });
+
+                return res.status(200).send(products);
+            }
+
             const numericParam: number = Number(param);
 
             if (!isNaN(numericParam)) {
@@ -33,7 +52,7 @@ export class ProductController {
                 });
 
                 if (!product) {
-                    return res.status(404).send({ message: "Produto não encontrado" });
+                    return res.status(404).send({ message: "Produto não encontrado." });
                 }
 
                 const products = await prisma.product.findMany({
@@ -66,12 +85,14 @@ export class ProductController {
                 });
 
                 if (products.length === 0) {
-                    return res.status(404).send({ message: "Categoria não encontrada" });
+                    return res.status(404).send({ message: "Categoria não encontrada." });
                 }
                 return res.status(200).send(products);
             }
         } catch (error) {
-            return res.status(500).send({ message: "Falha na consulta de produtos" });
+            return res
+                .status(500)
+                .send({ message: "Falha na consulta de produtos." });
         }
     }
 
@@ -91,9 +112,21 @@ export class ProductController {
             purchase_price,
             expiry_date,
             ean,
-        } = req.body as ProductData;
+            highlight,
+            black_friday_offer,
+        } = req.body;
+
+        const isBlackFriday = black_friday === "true";
+        const isHighlight = highlight === "true";
+        const isBlackFridayOffer = black_friday_offer === "true";
+
+        const storageIdValue = storage_id === "0" ? null : parseInt(storage_id);
+
+        console.log(storageIdValue);
 
         const img = req.file?.filename;
+
+        console.log(img);
 
         try {
             const productWithSameEAN = await findByEAN(ean);
@@ -126,16 +159,18 @@ export class ProductController {
                         const createdProduct = await prisma.product.create({
                             data: {
                                 name,
-                                price,
+                                price: Number(price),
+                                black_friday: isBlackFriday,
                                 image: img,
-                                black_friday,
-                                discount,
+                                discount: Number(discount),
                                 average_score,
                                 description,
                                 color_id: Number(color_id),
-                                storage_id: Number(storage_id),
+                                storage_id: storageIdValue,
                                 categorie_id: Number(categorie_id),
                                 ean,
+                                highlight: isHighlight,
+                                black_friday_offer: isBlackFridayOffer,
                             },
                         });
 
@@ -147,7 +182,7 @@ export class ProductController {
                                 status,
                                 purchase_price,
                                 expiry_date:
-                  expiry_date !== undefined ? new Date(expiry_date) : undefined,
+                  expiry_date !== null ? new Date(expiry_date) : null,
                                 created_at: new Date(),
                                 updated_at: new Date(),
                                 quantity: Number(quantity),
@@ -159,16 +194,16 @@ export class ProductController {
                 );
 
                 if (createdProductandStock) {
-                    return res.status(201).send({ message: "Novo produto cadastrado" });
+                    return res.status(201).send({ message: "Novo produto cadastrado." });
                 } else {
                     return res
                         .status(500)
-                        .send({ error: "Falha ao criar o produto ou o estoque" });
+                        .send({ error: "Falha ao criar o produto ou o estoque." });
                 }
             }
         } catch (error) {
             console.log(error);
-            return res.status(500).send({ message: "Falha ao cadastrar produto" });
+            return res.status(500).send({ message: "Falha ao cadastrar produto." });
         }
     }
 
@@ -184,7 +219,7 @@ export class ProductController {
             if (!productExistent) {
                 return res
                     .status(400)
-                    .send({ message: "Produto não consta na base de dados " });
+                    .send({ message: "Produto não consta na base de dados." });
             }
 
             const product_id: number = productExistent.id;
@@ -209,33 +244,21 @@ export class ProductController {
             if (deletedFromStockAndProduct) {
                 return res
                     .status(200)
-                    .send({ message: "Produto deletado com sucesso" });
+                    .send({ message: "Produto deletado com sucesso." });
             } else {
-                return res.status(404).send({ message: "Falha ao deletar produto" });
+                return res.status(404).send({ message: "Falha ao deletar produto." });
             }
         } catch (error) {
             return res
                 .status(500)
-                .send({ message: "Não foi possível remover o produto" });
+                .send({ message: "Não foi possível remover o produto." });
         }
-
-        res.status(200).send();
     }
 
     async update(req: Request, res: Response) {
         const id: number = Number(req.params.id);
 
-        const {
-            name,
-            price,
-            black_friday,
-            discount,
-            description,
-            color_id,
-            storage_id,
-            categorie_id,
-            ean,
-        } = req.body as ProductData;
+        const updatedFields = req.body as Partial<ProductData>;
 
         const productExistentInDatabase = await prisma.product.findUnique({
             where: {
@@ -246,7 +269,7 @@ export class ProductController {
         if (!productExistentInDatabase) {
             return res
                 .status(404)
-                .send({ message: "Produto não existe na base de dados" });
+                .send({ message: "Produto não existe na base de dados." });
         }
 
         try {
@@ -255,22 +278,16 @@ export class ProductController {
                     id,
                 },
                 data: {
-                    name,
-                    price,
-                    black_friday,
-                    discount,
-                    description,
-                    color_id: Number(color_id),
-                    storage_id: Number(storage_id),
-                    categorie_id: Number(categorie_id),
-                    ean,
+                    ...updatedFields,
                 },
             });
         } catch (error) {
             console.log(error);
-            return res.status(404).send({ message: "Erro ao atualizar produto" });
+            return res.status(404).send({ message: "Erro ao atualizar produto." });
         }
 
-        res.status(200).send({ message: "Produto alterado na base de dados " });
+        return res
+            .status(200)
+            .send({ message: "Produto alterado na base de dados." });
     }
 }
