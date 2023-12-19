@@ -17,6 +17,7 @@ model Address {
   city           String  @db.VarChar(100)
   state          String  @db.VarChar(50)
   recipient      String  @db.VarChar(100)
+  cep            String  @db.VarChar(9)
   users          User    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
 
   @@map("addresses")
@@ -36,6 +37,7 @@ model Color {
   name     String    @db.VarChar(50)
   products Product[]
 
+  @@unique(fields: [name])
   @@map("colors")
 }
 
@@ -65,24 +67,26 @@ model Order {
 }
 
 model Product {
-  id            Int          @id @default(autoincrement())
-  name          String       @db.VarChar(100)
-  price         Decimal      @db.Decimal(10, 2)
-  image         String?
-  black_friday  Boolean
-  discount      Decimal?     @db.Decimal(5, 2)
-  average_score Decimal?     @db.Decimal(3, 2)
-  description   String
-  color_id      Int
-  storage_id    Int
-  categorie_id  Int
-  ean           String       @db.VarChar(13)
-  order_items   Order_item[]
-  categories    Categorie    @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categorie")
-  colors        Color        @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_color")
-  storages      Storage      @relation(fields: [storage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage")
-  ratings       Rating[]
-  stocks        Stock[]
+  id                 Int          @id @default(autoincrement())
+  name               String       @db.VarChar(100)
+  price              Decimal      @db.Decimal(10, 2)
+  black_friday       Boolean
+  discount           Decimal?     @db.Decimal(5, 2)
+  average_score      Decimal?     @db.Decimal(3, 2)
+  description        String
+  color_id           Int
+  storage_id         Int?
+  categorie_id       Int
+  ean                String       @db.VarChar(13)
+  highlight          Boolean
+  image              String?      @db.VarChar(255)
+  black_friday_offer Boolean?
+  order_items        Order_item[]
+  categories         Categorie    @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categorie")
+  colors             Color        @relation(fields: [color_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_color")
+  storages           Storage?     @relation(fields: [storage_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_storage")
+  ratings            Rating[]
+  stocks             Stock[]
 
   @@map("products")
 }
