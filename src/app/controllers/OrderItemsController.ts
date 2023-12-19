@@ -4,13 +4,17 @@ import { Request, Response } from "express";
 
 export class OrderItemsController {
     async index(_req: Request, res: Response) {
-        const orderItems = await prisma.order_item.findMany({
-            include: {
-                products: true,
-                orders: true,
-            },
-        });
+        try {
+            const orderItems = await prisma.order_item.findMany({
+                include: {
+                    products: true,
+                    orders: true,
+                },
+            });
 
-        return res.json(orderItems);
+            return res.json(orderItems);
+        } catch (error) {
+            res.status(500).send({ message: "Falha ao buscar os pedidos." });
+        }
     }
 }
