@@ -7,4 +7,5 @@ export interface AddressData {
   city: string;
   state: string;
   recipient: string;
+  cep: string;
 }
