@@ -15,7 +15,7 @@ export class OrderController {
             return res.json(orders);
             
         } catch (error) {
-            return res.status(500).send({ message: "Erro ao buscar os pedidos." });
+            return res.status(500).send({ message: "Falha ao buscar os pedidos." });
         }
     }
 
@@ -110,11 +110,11 @@ export class OrderController {
             removeQuantityInStock(user_order);
             return res
                 .status(201)
-                .send({ message: "Novo pedido cadastrado na base de dados" });
+                .send({ message: "Novo pedido cadastrado na base de dados." });
         } else {
             return res
                 .status(500)
-                .send({ error: "Falha ao criar novo pedido na base de dados" });
+                .send({ error: "Falha ao criar novo pedido na base de dados." });
         }
     }
 }
