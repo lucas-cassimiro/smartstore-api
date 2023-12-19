@@ -17,12 +17,13 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/ColorsController.ts
-var ColorsController_exports = {};
-__export(ColorsController_exports, {
-  ColorController: () => ColorController
+// src/routes/colorsRoutes.ts
+var colorsRoutes_exports = {};
+__export(colorsRoutes_exports, {
+  default: () => colorsRoutes_default
 });
-module.exports = __toCommonJS(ColorsController_exports);
+module.exports = __toCommonJS(colorsRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -109,7 +110,10 @@ var ColorController = class {
     }
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  ColorController
-});
+
+// src/routes/colorsRoutes.ts
+var colorsRoutes = (0, import_express.Router)();
+colorsRoutes.get("/", new ColorController().index);
+colorsRoutes.post("/", new ColorController().create);
+colorsRoutes.put("/:id", new ColorController().update);
+var colorsRoutes_default = colorsRoutes;

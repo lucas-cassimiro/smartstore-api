@@ -44,12 +44,10 @@ var clientPrisma_default = prisma;
 var authMiddleware = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    console.log("autoriza\xE7\xE3o:", authorization);
     if (!authorization) {
-      return res.status(401).send({ message: "N\xE3o autorizado" });
+      return res.status(401).send({ message: "N\xE3o autorizado." });
     }
     const token = authorization.split(" ")[1];
-    console.log(token);
     const { id } = import_jsonwebtoken.default.verify(token, process.env.JWT_PASS ?? "").data;
     const findUser = await clientPrisma_default.user.findUnique({
       where: {
@@ -61,11 +59,8 @@ var authMiddleware = async (req, res, next) => {
     }
     const { password_hash: _, ...loggedUser } = findUser;
     req.user = loggedUser;
-    console.log("loggedUser:", loggedUser);
-    console.log("reqUser:", req.user);
     next();
   } catch (error) {
-    console.log("Erro ao decodificar o token:", error);
     return res.status(500).send({ message: "N\xE3o autorizado." });
   }
 };

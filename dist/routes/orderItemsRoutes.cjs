@@ -17,12 +17,13 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/OrderItemsController.ts
-var OrderItemsController_exports = {};
-__export(OrderItemsController_exports, {
-  OrderItemsController: () => OrderItemsController
+// src/routes/orderItemsRoutes.ts
+var orderItemsRoutes_exports = {};
+__export(orderItemsRoutes_exports, {
+  default: () => orderItemsRoutes_default
 });
-module.exports = __toCommonJS(OrderItemsController_exports);
+module.exports = __toCommonJS(orderItemsRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -45,7 +46,8 @@ var OrderItemsController = class {
     }
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  OrderItemsController
-});
+
+// src/routes/orderItemsRoutes.ts
+var orderItemsRoutes = (0, import_express.Router)();
+orderItemsRoutes.get("/", new OrderItemsController().index);
+var orderItemsRoutes_default = orderItemsRoutes;

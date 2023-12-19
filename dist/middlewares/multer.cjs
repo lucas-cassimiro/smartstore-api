@@ -27,20 +27,20 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/middlewares/multerProducts.ts
-var multerProducts_exports = {};
-__export(multerProducts_exports, {
-  default: () => multerProducts_default
+// src/middlewares/multer.ts
+var multer_exports = {};
+__export(multer_exports, {
+  default: () => multer_default
 });
-module.exports = __toCommonJS(multerProducts_exports);
+module.exports = __toCommonJS(multer_exports);
 var import_multer = __toESM(require("multer"), 1);
 var storage = import_multer.default.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, "./public/upload/images/product");
+    cb(null, "./tmp/uploads");
   },
   filename: function(req, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
   }
 });
 var upload = (0, import_multer.default)({ storage });
-var multerProducts_default = upload;
+var multer_default = upload;

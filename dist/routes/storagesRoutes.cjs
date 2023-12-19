@@ -17,12 +17,13 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/StoragesController.ts
-var StoragesController_exports = {};
-__export(StoragesController_exports, {
-  StorageController: () => StorageController
+// src/routes/storagesRoutes.ts
+var storagesRoutes_exports = {};
+__export(storagesRoutes_exports, {
+  default: () => storagesRoutes_default
 });
-module.exports = __toCommonJS(StoragesController_exports);
+module.exports = __toCommonJS(storagesRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -113,7 +114,10 @@ var StorageController = class {
     }
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  StorageController
-});
+
+// src/routes/storagesRoutes.ts
+var storagesRoutes = (0, import_express.Router)();
+storagesRoutes.get("/", new StorageController().index);
+storagesRoutes.post("/", new StorageController().create);
+storagesRoutes.put("/:id", new StorageController().update);
+var storagesRoutes_default = storagesRoutes;

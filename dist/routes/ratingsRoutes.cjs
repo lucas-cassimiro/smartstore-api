@@ -17,12 +17,13 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/RatingsController.ts
-var RatingsController_exports = {};
-__export(RatingsController_exports, {
-  RatingController: () => RatingController
+// src/routes/ratingsRoutes.ts
+var ratingsRoutes_exports = {};
+__export(ratingsRoutes_exports, {
+  default: () => ratingsRoutes_default
 });
-module.exports = __toCommonJS(RatingsController_exports);
+module.exports = __toCommonJS(ratingsRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -81,7 +82,9 @@ var RatingController = class {
     }
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  RatingController
-});
+
+// src/routes/ratingsRoutes.ts
+var ratingsRoutes = (0, import_express.Router)();
+ratingsRoutes.get("/", new RatingController().index);
+ratingsRoutes.post("/", new RatingController().create);
+var ratingsRoutes_default = ratingsRoutes;

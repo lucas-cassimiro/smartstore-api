@@ -17,12 +17,13 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/AddressesController.ts
-var AddressesController_exports = {};
-__export(AddressesController_exports, {
-  AddressController: () => AddressController
+// src/routes/addressesRoutes.ts
+var addressesRoutes_exports = {};
+__export(addressesRoutes_exports, {
+  default: () => addressesRoutes_default
 });
-module.exports = __toCommonJS(AddressesController_exports);
+module.exports = __toCommonJS(addressesRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -86,7 +87,9 @@ var AddressController = class {
   // async update(req: Request, res: Response) {
   // }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  AddressController
-});
+
+// src/routes/addressesRoutes.ts
+var addressesRoutes = (0, import_express.Router)();
+addressesRoutes.post("/", new AddressController().create);
+addressesRoutes.get("/:id", new AddressController().show);
+var addressesRoutes_default = addressesRoutes;

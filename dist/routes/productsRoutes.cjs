@@ -1,7 +1,9 @@
 "use strict";
+var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __export = (target, all) => {
   for (var name in all)
@@ -15,14 +17,23 @@ var __copyProps = (to, from, except, desc) => {
   }
   return to;
 };
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/ProductsController.ts
-var ProductsController_exports = {};
-__export(ProductsController_exports, {
-  ProductController: () => ProductController
+// src/routes/productsRoutes.ts
+var productsRoutes_exports = {};
+__export(productsRoutes_exports, {
+  default: () => productsRoutes_default
 });
-module.exports = __toCommonJS(ProductsController_exports);
+module.exports = __toCommonJS(productsRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -274,7 +285,25 @@ var ProductController = class {
     return res.status(200).send({ message: "Produto alterado na base de dados." });
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  ProductController
+
+// src/middlewares/multer.ts
+var import_multer = __toESM(require("multer"), 1);
+var storage = import_multer.default.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, "./tmp/uploads");
+  },
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
 });
+var upload = (0, import_multer.default)({ storage });
+var multer_default = upload;
+
+// src/routes/productsRoutes.ts
+var productsRoutes = (0, import_express.Router)();
+productsRoutes.get("/", new ProductController().index);
+productsRoutes.get("/:param", new ProductController().show);
+productsRoutes.post("/", multer_default.single("file"), new ProductController().create);
+productsRoutes.put("/:id", new ProductController().update);
+productsRoutes.delete("/:id", new ProductController().destroy);
+var productsRoutes_default = productsRoutes;

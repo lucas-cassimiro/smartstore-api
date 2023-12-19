@@ -17,12 +17,13 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/StocksController.ts
-var StocksController_exports = {};
-__export(StocksController_exports, {
-  StockController: () => StockController
+// src/routes/stocksRoutes.ts
+var stocksRoutes_exports = {};
+__export(stocksRoutes_exports, {
+  default: () => stocksRoutes_default
 });
-module.exports = __toCommonJS(StocksController_exports);
+module.exports = __toCommonJS(stocksRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -82,7 +83,9 @@ var StockController = class {
     }
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  StockController
-});
+
+// src/routes/stocksRoutes.ts
+var stocksRoutes = (0, import_express.Router)();
+stocksRoutes.get("/", new StockController().index);
+stocksRoutes.put("/:id", new StockController().update);
+var stocksRoutes_default = stocksRoutes;

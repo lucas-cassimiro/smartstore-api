@@ -17,12 +17,13 @@ var __copyProps = (to, from, except, desc) => {
 };
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/CategoriesController.ts
-var CategoriesController_exports = {};
-__export(CategoriesController_exports, {
-  CategorieController: () => CategorieController
+// src/routes/categoriesRoutes.ts
+var categoriesRoutes_exports = {};
+__export(categoriesRoutes_exports, {
+  default: () => categoriesRoutes_default
 });
-module.exports = __toCommonJS(CategoriesController_exports);
+module.exports = __toCommonJS(categoriesRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -117,7 +118,10 @@ var CategorieController = class {
     }
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  CategorieController
-});
+
+// src/routes/categoriesRoutes.ts
+var categoriesRoutes = (0, import_express.Router)();
+categoriesRoutes.get("/", new CategorieController().index);
+categoriesRoutes.post("/", new CategorieController().create);
+categoriesRoutes.put("/:id", new CategorieController().update);
+var categoriesRoutes_default = categoriesRoutes;

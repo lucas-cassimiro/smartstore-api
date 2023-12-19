@@ -27,12 +27,13 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// src/app/controllers/UsersController.ts
-var UsersController_exports = {};
-__export(UsersController_exports, {
-  UserController: () => UserController
+// src/routes/userRoutes.ts
+var userRoutes_exports = {};
+__export(userRoutes_exports, {
+  default: () => userRoutes_default
 });
-module.exports = __toCommonJS(UsersController_exports);
+module.exports = __toCommonJS(userRoutes_exports);
+var import_express = require("express");
 
 // config/clientPrisma.ts
 var import_client = require("@prisma/client");
@@ -165,7 +166,38 @@ var UserController = class {
     return res.json(req.user);
   }
 };
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  UserController
-});
+
+// src/middlewares/auth.ts
+var import_jsonwebtoken2 = __toESM(require("jsonwebtoken"), 1);
+var authMiddleware = async (req, res, next) => {
+  try {
+    const { authorization } = req.headers;
+    if (!authorization) {
+      return res.status(401).send({ message: "N\xE3o autorizado." });
+    }
+    const token = authorization.split(" ")[1];
+    const { id } = import_jsonwebtoken2.default.verify(token, process.env.JWT_PASS ?? "").data;
+    const findUser = await clientPrisma_default.user.findUnique({
+      where: {
+        id
+      }
+    });
+    if (!findUser) {
+      return res.status(401).send({ message: "N\xE3o autorizado." });
+    }
+    const { password_hash: _, ...loggedUser } = findUser;
+    req.user = loggedUser;
+    next();
+  } catch (error) {
+    return res.status(500).send({ message: "N\xE3o autorizado." });
+  }
+};
+
+// src/routes/userRoutes.ts
+var usersRoutes = (0, import_express.Router)();
+usersRoutes.get("/", new UserController().index);
+usersRoutes.get("/profile", authMiddleware, new UserController().getProfile);
+usersRoutes.post("/", new UserController().create);
+usersRoutes.post("/login", new UserController().login);
+usersRoutes.put("/:id", new UserController().update);
+var userRoutes_default = usersRoutes;
