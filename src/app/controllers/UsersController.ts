@@ -5,15 +5,18 @@ import jwt from "jsonwebtoken";
 
 import { Request, Response } from "express";
 import "../../utils/user/userUtils";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 import { UserData } from "../../interfaces/UserData";
 //import findExistentItem from "../utils/index/findExistentItem";
 
 export class UserController {
     async index(_req: Request, res: Response) {
-        const users = await prisma.user.findMany({});
-        return res.json(users);
+        try {
+            const users = await prisma.user.findMany();
+            return res.json(users);
+        } catch (error) {
+            return res.status(500).send({ message: "Falha ao buscar usuários." });
+        }
     }
 
     async create(req: Request, res: Response) {
@@ -37,7 +40,7 @@ export class UserController {
             // await findExistentItem("user", email);
 
             if (user) {
-                return res.status(404).json({ message: "Email já cadastrado." });
+                return res.status(404).json({ message: "E-mail já cadastrado." });
             }
             const newUser = {
                 email,
@@ -62,15 +65,7 @@ export class UserController {
 
             return res.status(201).json({ message: "Usuário criado com sucesso!" });
         } catch (error) {
-            if (error instanceof PrismaClientKnownRequestError) {
-                console.error("Prisma Error:", {
-                    code: error.code,
-                    clientVersion: error.clientVersion,
-                    meta: error.meta,
-                });
-            } else {
-                console.error("Erro desconhecido:", error);
-            }
+            return res.status(500).send({ message: "Erro ao criar usuário." });
         }
     }
 
@@ -79,7 +74,7 @@ export class UserController {
             const id: number = Number(req.params.id);
 
             const { password_hash, newPassword, date_birth, cellphone } =
-              req.body as UserData;
+        req.body as UserData;
 
             const findUser = await prisma.user.findUnique({
                 where: {
@@ -137,7 +132,10 @@ export class UserController {
             });
 
             if (!findUser)
-                return res.status(400).send({ message: "E-mail ou senha inválidos." });
+                return res.status(401).send({
+                    message:
+            "Este e-mail não está cadastrado. Clique em Inscrever-se e faça seu cadastro.",
+                });
 
             const verifyPass = await bcrypt.compare(
                 password_hash,
@@ -145,7 +143,9 @@ export class UserController {
             );
 
             if (!verifyPass) {
-                return res.status(400).send({ message: "E-mail ou senha inválidos." });
+                return res
+                    .status(401)
+                    .send({ message: "Usuário ou senha incorretos." });
             }
 
             const token = jwt.sign({ data: findUser }, process.env.JWT_PASS ?? "", {
