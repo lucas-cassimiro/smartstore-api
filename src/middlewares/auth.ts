@@ -3,23 +3,15 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../../config/clientPrisma";
 
-export const authMiddleware = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { authorization } = req.headers;
 
-        console.log("autorização:", authorization);
-
         if (!authorization) {
-            return res.status(401).send({ message: "Não autorizado" });
+            return res.status(401).send({ message: "Não autorizado." });
         }
 
         const token = authorization.split(" ")[1];
-
-        console.log(token);
 
         const { id } = (
         jwt.verify(token, process.env.JWT_PASS ?? "") as {
@@ -42,12 +34,8 @@ export const authMiddleware = async (
 
         req.user = loggedUser;
 
-        console.log("loggedUser:", loggedUser);
-        console.log("reqUser:", req.user);
-
         next();
     } catch (error) {
-        console.log("Erro ao decodificar o token:", error);
         return res.status(500).send({ message: "Não autorizado." });
     }
 };
