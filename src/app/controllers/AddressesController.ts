@@ -28,9 +28,7 @@ export class AddressController {
             });
 
             return res.json(address);
-            
         } catch (error) {
-            console.log(error);
             return res
                 .status(500)
                 .send({ message: "Não foi possível buscar o endereço." });
@@ -47,6 +45,7 @@ export class AddressController {
             city,
             state,
             recipient,
+            cep,
         } = req.body as AddressData;
 
         try {
@@ -60,6 +59,7 @@ export class AddressController {
                     city,
                     state,
                     recipient,
+                    cep,
                 },
             });
 
