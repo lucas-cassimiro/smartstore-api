@@ -122,11 +122,7 @@ export class ProductController {
 
         const storageIdValue = storage_id === "0" ? null : parseInt(storage_id);
 
-        console.log(storageIdValue);
-
         const img = req.file?.filename;
-
-        console.log(img);
 
         try {
             const productWithSameEAN = await findByEAN(ean);
