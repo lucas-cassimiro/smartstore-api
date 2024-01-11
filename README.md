@@ -53,12 +53,12 @@ npm run dev
 
 <h2>🛠️ Tecnologias Utilizadas no Backend</h2>
 
-Typescript;
-Node.js;
-Express.js;
-PostgreSQL;
-JWT para autenticação;
-Multer para upload de imagens;
+- Typescript;
+- Node.js;
+- Express.js;
+- PostgreSQL;
+- JWT para autenticação;
+- Multer para upload de imagens;
 
 🔗 Repositório Frontend [Smart Store Frontend](https://github.com/lucas-cassimiro/smartstore-next-ts-tailwind)
 
