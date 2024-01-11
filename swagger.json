@@ -221,7 +221,7 @@
                 "schema": {
                   "type": "object",
                   "items": {
-                    "$ref": "#/components/schemas/SmartProducts"
+                    "$ref": "#/components/schemas/Products"
                   }
                 }
               }
@@ -842,11 +842,40 @@
           }
         }
       }
+    },
+    "/orders": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "Lista de produtos comprados",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de produtos que foram comprados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar os pedidos."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Order"],
+        "summary": "Cadastrar um novo pedido."
+      }
     }
   },
+
   "components": {
     "schemas": {
-      "Smart": {
+      "Products": {
         "type": "object",
         "properties": {
           "id": {
