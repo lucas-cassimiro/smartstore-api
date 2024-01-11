@@ -49,6 +49,15 @@ export class AddressController {
         } = req.body as AddressData;
 
         try {
+            const addressExistent = await prisma.address.findUnique({
+                where: {
+                    cep,
+                },
+            });
+
+            if (addressExistent)
+                return res.status(400).send({ message: "Endereço já cadastrado." });
+
             await prisma.address.create({
                 data: {
                     user_id,
@@ -67,6 +76,7 @@ export class AddressController {
                 .status(201)
                 .send({ message: "Novo endereço cadastrado na base de dados." });
         } catch (error) {
+            console.log(error);
             return res
                 .status(500)
                 .send({ message: "Não foi possível cadastrar um novo endereço." });
@@ -74,6 +84,36 @@ export class AddressController {
     }
 
     // async update(req: Request, res: Response) {
+    //     const id: number = Number(req.params.id);
 
+    //     const {
+    //         street_address,
+    //         number_address,
+    //         complement,
+    //         neighborhood,
+    //         city,
+    //         state,
+    //         recipient,
+    //         cep,
+    //     } = req.body;
     // }
+
+    async delete(req: Request, res: Response) {
+        const id: number = Number(req.params.id);
+
+        try {
+            await prisma.address.delete({
+                where: {
+                    id,
+                },
+            });
+
+            return res.status(200).send({ message: "Endereço removido." });
+        } catch (error) {
+            console.log(error);
+            return res
+                .status(500)
+                .send({ message: "Não foi possível remover o endereço." });
+        }
+    }
 }
