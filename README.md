@@ -32,7 +32,9 @@ pnpm install
 <h2>Configuração do Banco de Dados</h2>
 <p>Configure as credenciais do banco de dados no arquivo `.env` utilizando o exemplo fornecido em `.env.example`.</p>
 
-<h2>Tabelas do Banco de Dados</h2>
+<h2>Diagrama das tabelas do Banco de Dados</h2>
+
+![Diagrama das tabelas](./src/assets/diagrama-tabelas.png)
 
 <h2>Iniciando o Servidor</h2>
 <p>Após a instalação das dependências e a configuração do banco de dados, você pode iniciar o servidor com o seguinte comando:</p>
@@ -49,7 +51,6 @@ npm run dev
 <p>Acesse diretamente o link da Documentação da API:</p>
 
 📃 [Documentação API]()
-
 
 <h2>🛠️ Tecnologias Utilizadas no Backend</h2>
 
