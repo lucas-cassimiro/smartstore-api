@@ -20,6 +20,7 @@ model Address {
   cep            String  @db.VarChar(9)
   users          User    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user")
 
+  @@unique(fields: [cep])
   @@map("addresses")
 }
 
