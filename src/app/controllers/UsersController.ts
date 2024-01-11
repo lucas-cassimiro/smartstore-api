@@ -7,7 +7,6 @@ import { Request, Response } from "express";
 import "../../utils/user/userUtils";
 
 import { UserData } from "../../interfaces/UserData";
-//import findExistentItem from "../utils/index/findExistentItem";
 
 export class UserController {
     async index(_req: Request, res: Response) {
@@ -36,8 +35,6 @@ export class UserController {
                     email: email,
                 },
             });
-
-            // await findExistentItem("user", email);
 
             if (user) {
                 return res.status(404).json({ message: "E-mail já cadastrado." });
