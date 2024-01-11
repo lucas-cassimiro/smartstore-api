@@ -3,8 +3,6 @@ import { Request, Response } from "express";
 import prisma from "../../../config/clientPrisma";
 import { CategorieData } from "../../interfaces/CategorieData";
 
-//import findExistentItem from "../utils/index/findExistentItem";
-
 export class CategorieController {
     async index(_req: Request, res: Response) {
         try {
