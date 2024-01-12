@@ -34,7 +34,7 @@ pnpm install
 
 <h2>Diagrama das tabelas do Banco de Dados</h2>
 
-![Diagrama das tabelas](./src/assets/diagrama-tabelas.png)
+![Diagrama das tabelas](./src/assets/diagrama.png)
 
 <h2>Iniciando o Servidor</h2>
 <p>Após a instalação das dependências e a configuração do banco de dados, você pode iniciar o servidor com o seguinte comando:</p>
