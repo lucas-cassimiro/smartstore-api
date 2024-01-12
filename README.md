@@ -30,7 +30,7 @@ pnpm install
 ```
 
 <h2>Configuração do Banco de Dados</h2>
-<p>Configure as credenciais do banco de dados no arquivo `.env` utilizando o exemplo fornecido em `.env.example`.</p>
+<p>Crie um arquivo `.env` na raiz do projeto e configure as credenciais do Banco de Dados no arquivo `.env`.</p>
 
 <h2>Diagrama das tabelas do Banco de Dados</h2>
 
