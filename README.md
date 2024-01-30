@@ -60,6 +60,7 @@ npm run dev
 - PostgreSQL;
 - JWT para autenticação;
 - Multer para upload de imagens;
+- Estrutura MVC.
 
 🔗 Repositório Frontend [Smart Store Frontend](https://github.com/lucas-cassimiro/smartstore-next-ts-tailwind)
 

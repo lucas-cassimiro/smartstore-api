@@ -58,6 +58,6 @@ export class HighlightController {
 
         return res
             .status(200)
-            .send({ message: "Produto alterado na base de dados." });
+            .send({ message: "Produto adicionado na sessão Novidades." });
     }
 }

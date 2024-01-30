@@ -121,8 +121,9 @@ export class ProductController {
         const isBlackFridayOffer = black_friday_offer === "true";
 
         const storageIdValue = storage_id === "0" ? null : parseInt(storage_id);
+        const expiryDate = expiry_date ? new Date(expiry_date) : undefined;
 
-        const img = req.file?.filename;
+        const image = req.file?.filename;
 
         try {
             const productWithSameEAN = await findByEAN(ean);
@@ -157,7 +158,7 @@ export class ProductController {
                                 name,
                                 price: Number(price),
                                 black_friday: isBlackFriday,
-                                image: img,
+                                image: image,
                                 discount: Number(discount),
                                 average_score,
                                 description,
@@ -177,8 +178,7 @@ export class ProductController {
                                 product_id,
                                 status,
                                 purchase_price,
-                                expiry_date:
-                  expiry_date !== null ? new Date(expiry_date) : null,
+                                expiry_date: expiryDate,
                                 created_at: new Date(),
                                 updated_at: new Date(),
                                 quantity: Number(quantity),
@@ -245,6 +245,7 @@ export class ProductController {
                 return res.status(404).send({ message: "Falha ao deletar produto." });
             }
         } catch (error) {
+            console.log(error);
             return res
                 .status(500)
                 .send({ message: "Não foi possível remover o produto." });
@@ -254,7 +255,11 @@ export class ProductController {
     async update(req: Request, res: Response) {
         const id: number = Number(req.params.id);
 
+        console.log(id);
+
         const updatedFields = req.body as Partial<ProductData>;
+
+        console.log(updatedFields);
 
         const productExistentInDatabase = await prisma.product.findUnique({
             where: {
