@@ -120,4 +120,5 @@ var storagesRoutes = (0, import_express.Router)();
 storagesRoutes.get("/", new StorageController().index);
 storagesRoutes.post("/", new StorageController().create);
 storagesRoutes.put("/:id", new StorageController().update);
+storagesRoutes.delete("/:id", new StorageController().destroy);
 var storagesRoutes_default = storagesRoutes;

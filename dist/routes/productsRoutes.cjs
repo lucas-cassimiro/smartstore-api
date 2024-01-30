@@ -153,9 +153,8 @@ var ProductController = class {
     const isHighlight = highlight === "true";
     const isBlackFridayOffer = black_friday_offer === "true";
     const storageIdValue = storage_id === "0" ? null : parseInt(storage_id);
-    console.log(storageIdValue);
-    const img = req.file?.filename;
-    console.log(img);
+    const expiryDate = expiry_date ? new Date(expiry_date) : void 0;
+    const image = req.file?.filename;
     try {
       const productWithSameEAN = await findByEAN(ean);
       if (productWithSameEAN) {
@@ -185,7 +184,7 @@ var ProductController = class {
                 name,
                 price: Number(price),
                 black_friday: isBlackFriday,
-                image: img,
+                image,
                 discount: Number(discount),
                 average_score,
                 description,
@@ -203,7 +202,7 @@ var ProductController = class {
                 product_id,
                 status,
                 purchase_price,
-                expiry_date: expiry_date !== null ? new Date(expiry_date) : null,
+                expiry_date: expiryDate,
                 created_at: /* @__PURE__ */ new Date(),
                 updated_at: /* @__PURE__ */ new Date(),
                 quantity: Number(quantity)
@@ -255,12 +254,15 @@ var ProductController = class {
         return res.status(404).send({ message: "Falha ao deletar produto." });
       }
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ message: "N\xE3o foi poss\xEDvel remover o produto." });
     }
   }
   async update(req, res) {
     const id = Number(req.params.id);
+    console.log(id);
     const updatedFields = req.body;
+    console.log(updatedFields);
     const productExistentInDatabase = await clientPrisma_default.product.findUnique({
       where: {
         id

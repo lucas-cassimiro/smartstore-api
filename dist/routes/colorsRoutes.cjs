@@ -116,4 +116,5 @@ var colorsRoutes = (0, import_express.Router)();
 colorsRoutes.get("/", new ColorController().index);
 colorsRoutes.post("/", new ColorController().create);
 colorsRoutes.put("/:id", new ColorController().update);
+colorsRoutes.delete("/:id", new ColorController().destroy);
 var colorsRoutes_default = colorsRoutes;

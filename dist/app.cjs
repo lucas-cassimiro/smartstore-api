@@ -70,9 +70,9 @@ var swagger_default = {
             content: {
               "application/json": {
                 schema: {
-                  type: "object",
+                  type: "array",
                   items: {
-                    $ref: "#/components/schemas/Smart"
+                    $ref: "#/components/schemas/User"
                   }
                 }
               }
@@ -92,7 +92,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartRegister"
+                $ref: "#/components/schemas/RegisterUser"
               }
             }
           }
@@ -120,7 +120,7 @@ var swagger_default = {
             content: {
               "application/json": {
                 schema: {
-                  $ref: "#/components/schemas/SmartAuthorization"
+                  $ref: "#/components/schemas/AuthorizationUser"
                 }
               }
             }
@@ -138,7 +138,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartToken"
+                $ref: "#/components/schemas/TokenUser"
               }
             }
           }
@@ -176,7 +176,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartInput"
+                $ref: "#/components/schemas/UpdateUser"
               }
             }
           }
@@ -207,7 +207,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartAddress"
+                $ref: "#/components/schemas/Address"
               }
             }
           }
@@ -262,7 +262,7 @@ var swagger_default = {
                 schema: {
                   type: "object",
                   items: {
-                    $ref: "#/components/schemas/SmartProducts"
+                    $ref: "#/components/schemas/Products"
                   }
                 }
               }
@@ -281,7 +281,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartProductPut"
+                $ref: "#/components/schemas/RegisterProduct"
               }
             }
           }
@@ -302,13 +302,13 @@ var swagger_default = {
     "/products/{param}": {
       get: {
         tags: ["Product"],
-        summary: "Obter produto espec\xEDfico pelo ID ou CATEGORIA.",
+        summary: "Filtrar produto por ID ou CATEGORIA.",
         parameters: [
           {
-            name: "id",
+            name: "param",
             in: "path",
             required: true,
-            description: "Produto a ser buscado.",
+            description: "ID ou CATEGORIA do Produtos a ser buscado.",
             schema: {
               type: "integer"
             }
@@ -322,14 +322,17 @@ var swagger_default = {
                 schema: {
                   type: "object",
                   items: {
-                    $ref: "#/components/schemas/SmartProductParam"
+                    $ref: "#/components/schemas/Products"
                   }
                 }
               }
             }
           },
+          "404": {
+            description: "Produto n\xE3o encontrado."
+          },
           "400": {
-            description: "Categoria n\xE3o encontrada."
+            description: "Categoria de produto n\xE3o encontrada."
           },
           "500": {
             description: "Falha na consulta de produtos."
@@ -357,7 +360,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartProductPut"
+                $ref: "#/components/schemas/UpdateProduct"
               }
             }
           }
@@ -391,16 +394,6 @@ var swagger_default = {
             }
           }
         ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/SmartProductDelete"
-              }
-            }
-          }
-        },
         responses: {
           "400": {
             description: "Produto n\xE3o consta na base de dados."
@@ -426,7 +419,7 @@ var swagger_default = {
                 schema: {
                   type: "object",
                   items: {
-                    $ref: "#/components/schemas/SmartStock"
+                    $ref: "#/components/schemas/Stock"
                   }
                 }
               }
@@ -458,7 +451,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartStockPut"
+                $ref: "#/components/schemas/UpdateStock"
               }
             }
           }
@@ -488,7 +481,7 @@ var swagger_default = {
                 schema: {
                   type: "object",
                   items: {
-                    $ref: "#/components/schemas/SmartRating"
+                    $ref: "#/components/schemas/Rating"
                   }
                 }
               }
@@ -507,7 +500,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartRatingPost"
+                $ref: "#/components/schemas/RegisterRating"
               }
             }
           }
@@ -527,7 +520,7 @@ var swagger_default = {
                 schema: {
                   type: "object",
                   items: {
-                    $ref: "#/components/schemas/SmartColor"
+                    $ref: "#/components/schemas/Color"
                   }
                 }
               }
@@ -546,7 +539,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartColorPost"
+                $ref: "#/components/schemas/RegisterColor"
               }
             }
           }
@@ -584,7 +577,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartColorsPut"
+                $ref: "#/components/schemas/UpdateColor"
               }
             }
           }
@@ -615,16 +608,6 @@ var swagger_default = {
             }
           }
         ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/SmartColorsDelete"
-              }
-            }
-          }
-        },
         responses: {
           "400": {
             description: "Cor n\xE3o consta na base de dados."
@@ -650,7 +633,7 @@ var swagger_default = {
                 schema: {
                   type: "object",
                   items: {
-                    $ref: "#/components/schemas/SmartCategorie"
+                    $ref: "#/components/schemas/Categorie"
                   }
                 }
               }
@@ -669,7 +652,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartCategoriePost"
+                $ref: "#/components/schemas/RegisterCategorie"
               }
             }
           }
@@ -707,7 +690,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartCategoriePut"
+                $ref: "#/components/schemas/UpdateCategorie"
               }
             }
           }
@@ -738,16 +721,6 @@ var swagger_default = {
             }
           }
         ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/SmartCategorieDelete"
-              }
-            }
-          }
-        },
         responses: {
           "400": {
             description: "Categoria n\xE3o consta na base de dados."
@@ -773,7 +746,7 @@ var swagger_default = {
                 schema: {
                   type: "object",
                   items: {
-                    $ref: "#/components/schemas/SmartStorage"
+                    $ref: "#/components/schemas/Storage"
                   }
                 }
               }
@@ -792,7 +765,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartStoragePost"
+                $ref: "#/components/schemas/RegisterStorage"
               }
             }
           }
@@ -830,7 +803,7 @@ var swagger_default = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/SmartStoragePut"
+                $ref: "#/components/schemas/UpdateStorage"
               }
             }
           }
@@ -861,16 +834,6 @@ var swagger_default = {
             }
           }
         ],
-        requestBody: {
-          required: true,
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/SmartStorageDelete"
-              }
-            }
-          }
-        },
         responses: {
           "400": {
             description: "Armazenamento n\xE3o consta na base de dados."
@@ -883,11 +846,39 @@ var swagger_default = {
           }
         }
       }
+    },
+    "/orders": {
+      get: {
+        tags: ["Order"],
+        summary: "Lista de produtos comprados",
+        responses: {
+          "200": {
+            description: "Retorna uma lista de produtos que foram comprados.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  items: {
+                    $ref: "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            description: "Falha ao buscar os pedidos."
+          }
+        }
+      },
+      post: {
+        tags: ["Order"],
+        summary: "Cadastrar um novo pedido."
+      }
     }
   },
   components: {
     schemas: {
-      Smart: {
+      User: {
         type: "object",
         properties: {
           id: {
@@ -939,7 +930,7 @@ var swagger_default = {
           }
         }
       },
-      SmartInput: {
+      UpdateUser: {
         type: "object",
         required: ["password_hash", "date_birth", "cellphone"],
         properties: {
@@ -958,7 +949,7 @@ var swagger_default = {
           }
         }
       },
-      SmartRegister: {
+      RegisterUser: {
         type: "object",
         required: [
           "email",
@@ -998,6 +989,355 @@ var swagger_default = {
           password_hash: {
             type: "string",
             description: "Senha da conta do usu\xE1rio"
+          }
+        }
+      },
+      Color: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+            description: "ID da Cor"
+          },
+          name: {
+            type: "string",
+            description: "Nome da cor"
+          }
+        }
+      },
+      RegisterColor: {
+        type: "object",
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            description: "Nome da cor"
+          }
+        }
+      },
+      UpdateColor: {
+        type: "object",
+        required: ["id", "name"],
+        properties: {
+          id: {
+            type: "integer",
+            description: "ID da Cor a ser atualizada"
+          },
+          name: {
+            type: "string",
+            description: "Nome da nova cor"
+          }
+        }
+      },
+      Storage: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+            description: "ID do Armazenamento"
+          },
+          capacity: {
+            type: "string",
+            description: "Nome do Armazenamento"
+          }
+        }
+      },
+      RegisterStorage: {
+        type: "object",
+        required: ["capacity"],
+        properties: {
+          capacity: {
+            type: "string",
+            description: "Nome da cor"
+          }
+        }
+      },
+      UpdateStorage: {
+        type: "object",
+        required: ["id", "capacity"],
+        properties: {
+          id: {
+            type: "integer",
+            description: "ID do Armazenamento a ser atualizado"
+          },
+          capacity: {
+            type: "string",
+            description: "Nova capacidade"
+          }
+        }
+      },
+      Categorie: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+            description: "ID da Categoria"
+          },
+          name: {
+            type: "string",
+            description: "Nome da Categoria"
+          }
+        }
+      },
+      RegisterCategorie: {
+        type: "object",
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            description: "Nome da Categoria"
+          }
+        }
+      },
+      UpdateCategorie: {
+        type: "object",
+        required: ["id", "name"],
+        properties: {
+          id: {
+            type: "integer",
+            description: "ID da Categoria a ser atualizada"
+          },
+          name: {
+            type: "string",
+            description: "Nome da nova Categoria"
+          }
+        }
+      },
+      Products: {
+        type: "object",
+        properties: {
+          id: {
+            type: "integer",
+            description: "ID do Produto"
+          },
+          name: {
+            type: "string",
+            description: "Nome do Produto"
+          },
+          price: {
+            type: "number",
+            description: "Pre\xE7o do Produto"
+          },
+          black_friday: {
+            type: "boolean",
+            description: "Black Friday do Produto"
+          },
+          discount: {
+            type: "number",
+            description: "Desconto do Produto"
+          },
+          average_score: {
+            type: "number",
+            description: "M\xE9dia de Avalia\xE7\xE3o do Produto"
+          },
+          description: {
+            type: "string",
+            description: "Descri\xE7\xE3o do Produto"
+          },
+          color_id: {
+            type: "integer",
+            description: "Cor do Produto"
+          },
+          colors: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+                description: "ID da Cor"
+              },
+              name: {
+                type: "string",
+                description: "Nome da Cor"
+              }
+            }
+          },
+          storage_id: {
+            type: "integer",
+            description: "Armazenamento do Produto"
+          },
+          storages: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+                description: "ID do Armazenamento"
+              },
+              capacity: {
+                type: "number",
+                description: "Capacidade de Armazenamento"
+              }
+            }
+          },
+          categorie_id: {
+            type: "integer",
+            description: "Categoria do Produto"
+          },
+          categories: {
+            type: "object",
+            properties: {
+              id: {
+                type: "integer",
+                description: "ID da Categoria"
+              },
+              name: {
+                type: "string",
+                description: "Categoria do Produto"
+              }
+            }
+          },
+          ean: {
+            type: "string",
+            description: "N\xFAmero de Identifica\xE7\xE3o do Produto"
+          },
+          highlight: {
+            type: "boolean",
+            description: "Produto \xE9 novidade ou n\xE3o"
+          },
+          image: {
+            type: "string",
+            description: "Imagem do Produto"
+          },
+          black_friday_offer: {
+            type: "boolean",
+            description: "Oferta Black Friday de Produtos espec\xEDficos"
+          }
+        }
+      },
+      RegisterProduct: {
+        type: "object",
+        required: [
+          "name",
+          "price",
+          "black_friday",
+          "discount",
+          "description",
+          "color_id",
+          "storage_id",
+          "categorie_id",
+          "ean",
+          "highlight",
+          "image",
+          "black_friday_offer"
+        ],
+        properties: {
+          name: {
+            type: "string",
+            description: "Nome do Produto"
+          },
+          price: {
+            type: "number",
+            description: "Pre\xE7o do Produto"
+          },
+          black_friday: {
+            type: "boolean",
+            description: "Black Friday do Produto"
+          },
+          discount: {
+            type: "number",
+            description: "Desconto do Produto"
+          },
+          description: {
+            type: "string",
+            description: "Descri\xE7\xE3o do Produto"
+          },
+          color_id: {
+            type: "integer",
+            description: "Cor do Produto"
+          },
+          storage_id: {
+            type: "integer",
+            description: "Armazenamento do Produto"
+          },
+          categorie_id: {
+            type: "integer",
+            description: "Categoria do Produto"
+          },
+          ean: {
+            type: "string",
+            description: "N\xFAmero de Identifica\xE7\xE3o do Produto"
+          },
+          highlight: {
+            type: "boolean",
+            description: "Produto \xE9 novidade ou n\xE3o"
+          },
+          image: {
+            type: "string",
+            description: "Imagem do Produto"
+          },
+          black_friday_offer: {
+            type: "boolean",
+            description: "Oferta Black Friday de Produtos espec\xEDficos"
+          }
+        }
+      },
+      UpdateProduct: {
+        type: "object",
+        required: [
+          "name",
+          "price",
+          "black_friday",
+          "discount",
+          "description",
+          "color_id",
+          "storage_id",
+          "categorie_id",
+          "ean",
+          "highlight",
+          "image",
+          "black_friday_offer"
+        ],
+        properties: {
+          name: {
+            type: "string",
+            description: "Nome do Produto"
+          },
+          price: {
+            type: "number",
+            description: "Pre\xE7o do Produto"
+          },
+          black_friday: {
+            type: "boolean",
+            description: "Black Friday do Produto"
+          },
+          discount: {
+            type: "number",
+            description: "Desconto do Produto"
+          },
+          average_score: {
+            type: "number",
+            description: "M\xE9dia de Avalia\xE7\xE3o do Produto"
+          },
+          description: {
+            type: "string",
+            description: "Descri\xE7\xE3o do Produto"
+          },
+          color_id: {
+            type: "integer",
+            description: "Cor do Produto"
+          },
+          storage_id: {
+            type: "integer",
+            description: "Armazenamento do Produto"
+          },
+          categorie_id: {
+            type: "integer",
+            description: "Categoria do Produto"
+          },
+          ean: {
+            type: "string",
+            description: "N\xFAmero de Identifica\xE7\xE3o do Produto"
+          },
+          highlight: {
+            type: "boolean",
+            description: "Produto \xE9 novidade ou n\xE3o"
+          },
+          image: {
+            type: "string",
+            description: "Imagem do Produto"
+          },
+          black_friday_offer: {
+            type: "boolean",
+            description: "Oferta Black Friday de Produtos espec\xEDficos"
           }
         }
       }
@@ -1049,6 +1389,13 @@ var AddressController = class {
       cep
     } = req.body;
     try {
+      const addressExistent = await clientPrisma_default.address.findUnique({
+        where: {
+          cep
+        }
+      });
+      if (addressExistent)
+        return res.status(400).send({ message: "Endere\xE7o j\xE1 cadastrado." });
       await clientPrisma_default.address.create({
         data: {
           user_id,
@@ -1064,17 +1411,44 @@ var AddressController = class {
       });
       return res.status(201).send({ message: "Novo endere\xE7o cadastrado na base de dados." });
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ message: "N\xE3o foi poss\xEDvel cadastrar um novo endere\xE7o." });
     }
   }
   // async update(req: Request, res: Response) {
+  //     const id: number = Number(req.params.id);
+  //     const {
+  //         street_address,
+  //         number_address,
+  //         complement,
+  //         neighborhood,
+  //         city,
+  //         state,
+  //         recipient,
+  //         cep,
+  //     } = req.body;
   // }
+  async delete(req, res) {
+    const id = Number(req.params.id);
+    try {
+      await clientPrisma_default.address.delete({
+        where: {
+          id
+        }
+      });
+      return res.status(200).send({ message: "Endere\xE7o removido." });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).send({ message: "N\xE3o foi poss\xEDvel remover o endere\xE7o." });
+    }
+  }
 };
 
 // src/routes/addressesRoutes.ts
 var addressesRoutes = (0, import_express.Router)();
-addressesRoutes.post("/", new AddressController().create);
 addressesRoutes.get("/:id", new AddressController().show);
+addressesRoutes.post("/", new AddressController().create);
+addressesRoutes.delete("/:id", new AddressController().delete);
 var addressesRoutes_default = addressesRoutes;
 
 // src/routes/userRoutes.ts
@@ -1331,6 +1705,7 @@ var colorsRoutes = (0, import_express3.Router)();
 colorsRoutes.get("/", new ColorController().index);
 colorsRoutes.post("/", new ColorController().create);
 colorsRoutes.put("/:id", new ColorController().update);
+colorsRoutes.delete("/:id", new ColorController().destroy);
 var colorsRoutes_default = colorsRoutes;
 
 // src/routes/categoriesRoutes.ts
@@ -1430,6 +1805,7 @@ var categoriesRoutes = (0, import_express4.Router)();
 categoriesRoutes.get("/", new CategorieController().index);
 categoriesRoutes.post("/", new CategorieController().create);
 categoriesRoutes.put("/:id", new CategorieController().update);
+categoriesRoutes.delete("/:id", new CategorieController().destroy);
 var categoriesRoutes_default = categoriesRoutes;
 
 // src/routes/productsRoutes.ts
@@ -1548,9 +1924,8 @@ var ProductController = class {
     const isHighlight = highlight === "true";
     const isBlackFridayOffer = black_friday_offer === "true";
     const storageIdValue = storage_id === "0" ? null : parseInt(storage_id);
-    console.log(storageIdValue);
-    const img = req.file?.filename;
-    console.log(img);
+    const expiryDate = expiry_date ? new Date(expiry_date) : void 0;
+    const image = req.file?.filename;
     try {
       const productWithSameEAN = await findByEAN(ean);
       if (productWithSameEAN) {
@@ -1580,7 +1955,7 @@ var ProductController = class {
                 name,
                 price: Number(price),
                 black_friday: isBlackFriday,
-                image: img,
+                image,
                 discount: Number(discount),
                 average_score,
                 description,
@@ -1598,7 +1973,7 @@ var ProductController = class {
                 product_id,
                 status,
                 purchase_price,
-                expiry_date: expiry_date !== null ? new Date(expiry_date) : null,
+                expiry_date: expiryDate,
                 created_at: /* @__PURE__ */ new Date(),
                 updated_at: /* @__PURE__ */ new Date(),
                 quantity: Number(quantity)
@@ -1650,12 +2025,15 @@ var ProductController = class {
         return res.status(404).send({ message: "Falha ao deletar produto." });
       }
     } catch (error) {
+      console.log(error);
       return res.status(500).send({ message: "N\xE3o foi poss\xEDvel remover o produto." });
     }
   }
   async update(req, res) {
     const id = Number(req.params.id);
+    console.log(id);
     const updatedFields = req.body;
+    console.log(updatedFields);
     const productExistentInDatabase = await clientPrisma_default.product.findUnique({
       where: {
         id
@@ -1921,6 +2299,7 @@ var storagesRoutes = (0, import_express8.Router)();
 storagesRoutes.get("/", new StorageController().index);
 storagesRoutes.post("/", new StorageController().create);
 storagesRoutes.put("/:id", new StorageController().update);
+storagesRoutes.delete("/:id", new StorageController().destroy);
 var storagesRoutes_default = storagesRoutes;
 
 // src/routes/orderItemsRoutes.ts
@@ -1995,7 +2374,7 @@ var HighlightController = class {
       console.log(error);
       return res.status(404).send({ message: "Erro ao atualizar produto." });
     }
-    return res.status(200).send({ message: "Produto alterado na base de dados." });
+    return res.status(200).send({ message: "Produto adicionado na sess\xE3o Novidades." });
   }
 };
 

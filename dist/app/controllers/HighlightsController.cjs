@@ -73,7 +73,7 @@ var HighlightController = class {
       console.log(error);
       return res.status(404).send({ message: "Erro ao atualizar produto." });
     }
-    return res.status(200).send({ message: "Produto alterado na base de dados." });
+    return res.status(200).send({ message: "Produto adicionado na sess\xE3o Novidades." });
   }
 };
 // Annotate the CommonJS export names for ESM import in node:
