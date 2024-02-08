@@ -1378,7 +1378,6 @@ var AddressController = class {
   }
   async create(req, res) {
     const {
-      user_id,
       street_address,
       number_address,
       complement,
@@ -1388,6 +1387,7 @@ var AddressController = class {
       recipient,
       cep
     } = req.body;
+    const user_id = Number(req.params.id);
     try {
       const addressExistent = await clientPrisma_default.address.findUnique({
         where: {
@@ -1435,7 +1435,7 @@ var AddressController = class {
 // src/routes/addressesRoutes.ts
 var addressesRoutes = (0, import_express.Router)();
 addressesRoutes.get("/:id", new AddressController().show);
-addressesRoutes.post("/", new AddressController().create);
+addressesRoutes.post("/:id", new AddressController().create);
 addressesRoutes.delete("/:id", new AddressController().delete);
 var addressesRoutes_default = addressesRoutes;
 

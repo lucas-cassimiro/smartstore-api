@@ -54,7 +54,6 @@ var AddressController = class {
   }
   async create(req, res) {
     const {
-      user_id,
       street_address,
       number_address,
       complement,
@@ -64,6 +63,7 @@ var AddressController = class {
       recipient,
       cep
     } = req.body;
+    const user_id = Number(req.params.id);
     try {
       const addressExistent = await clientPrisma_default.address.findUnique({
         where: {

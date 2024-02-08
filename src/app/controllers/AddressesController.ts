@@ -37,7 +37,6 @@ export class AddressController {
 
     async create(req: Request, res: Response) {
         const {
-            user_id,
             street_address,
             number_address,
             complement,
@@ -47,6 +46,8 @@ export class AddressController {
             recipient,
             cep,
         } = req.body as AddressData;
+
+        const user_id = Number(req.params.id);
 
         try {
             const addressExistent = await prisma.address.findUnique({
