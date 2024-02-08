@@ -1527,19 +1527,6 @@ var AddressController = class {
       return res.status(500).send({ message: "N\xE3o foi poss\xEDvel cadastrar um novo endere\xE7o." });
     }
   }
-  // async update(req: Request, res: Response) {
-  //     const id: number = Number(req.params.id);
-  //     const {
-  //         street_address,
-  //         number_address,
-  //         complement,
-  //         neighborhood,
-  //         city,
-  //         state,
-  //         recipient,
-  //         cep,
-  //     } = req.body;
-  // }
   async delete(req, res) {
     const id = Number(req.params.id);
     try {

@@ -83,21 +83,6 @@ export class AddressController {
         }
     }
 
-    // async update(req: Request, res: Response) {
-    //     const id: number = Number(req.params.id);
-
-    //     const {
-    //         street_address,
-    //         number_address,
-    //         complement,
-    //         neighborhood,
-    //         city,
-    //         state,
-    //         recipient,
-    //         cep,
-    //     } = req.body;
-    // }
-
     async delete(req: Request, res: Response) {
         const id: number = Number(req.params.id);
 
