@@ -55,8 +55,9 @@ export class AddressController {
                 },
             });
 
-            if (addressExistent)
+            if (addressExistent) {
                 return res.status(400).send({ message: "Endereço já cadastrado." });
+            }
 
             await prisma.address.create({
                 data: {

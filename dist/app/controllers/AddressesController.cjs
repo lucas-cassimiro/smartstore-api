@@ -70,8 +70,9 @@ var AddressController = class {
           cep
         }
       });
-      if (addressExistent)
+      if (addressExistent) {
         return res.status(400).send({ message: "Endere\xE7o j\xE1 cadastrado." });
+      }
       await clientPrisma_default.address.create({
         data: {
           user_id,
