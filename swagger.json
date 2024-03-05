@@ -1,0 +1,1306 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Smart store API Documentation",
+    "description": "API responsável por gerenciar produtos, estoques, pedidos, usuários, autenticação, avaliações de produtos, endereços de usuários, categorias de produtos, cores e armazenamento da loja Smart store",
+    "contact": {
+      "email": "lucascassimro545@hotmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://smartshop-api-foy4.onrender.com/",
+      "description": "Web Server"
+    },
+    {
+      "url": "http://localhost:3333",
+      "description": "Local Server"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Obter todos os usuários cadastrados no Banco de Dados.",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de usuários.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar usuários."
+          }
+        }
+      },
+      "post": {
+        "tags": ["User"],
+        "summary": "Cadastrar um usuário no Banco de Dados.",
+        "requestBody": {
+          "description": "Dados de cadastro do usuário.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "404": {
+            "description": "E-mail já cadastrado."
+          },
+          "201": {
+            "description": "Usuário criado com sucesso!"
+          },
+          "500": {
+            "description": "Falha ao criar usuário."
+          }
+        }
+      }
+    },
+    "/users/profile": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Obter informações do perfil do usuário e enviá-las para o frontend após a autenticação. Rota responsável também pelo gerenciamento do middleware do Token de autenticação.",
+        "responses": {
+          "200": {
+            "description": "Retorna os dados do usuário.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizationUser"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Responsável por autenticar um usuário. Ela recebe dados de login (email e senha), consulta o Banco de Dados para verificar a existência desses dados e, se válidos, gera um token JWT para autenticação subsequente.",
+        "requestBody": {
+          "description": "Dados de login do usuário.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Usuário ou senha incorretos."
+          },
+          "200": {
+            "description": "Envia os dados de acesso do usuário para o Frontend e o Token de autenticação."
+          },
+          "500": {
+            "description": "Falha ao fazer LOGIN."
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Atualizar dados de cadastro do usuário.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Conta do usuário a ser atualizada.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro do usuário atualizado com sucesso."
+          },
+          "400": {
+            "description": "Senha atual inválida."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          },
+          "500": {
+            "description": "Falha ao atualizar conta do usuário."
+          }
+        }
+      }
+    },
+    "/address": {
+      "post": {
+        "tags": ["Address"],
+        "summary": "Cadastrar endereço do usuário.",
+        "requestBody": {
+          "description": "Dados de endereço do usuário.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Novo endereço cadastrado."
+          },
+          "500": {
+            "description": "Não foi possível cadastrar um novo endereço."
+          }
+        }
+      }
+    },
+    "/address/{id}": {
+      "get": {
+        "tags": ["Address"],
+        "summary": "Obter endereço do usuário específico.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Conta do usuário a ser atualizada.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de endereço do usuário."
+          },
+          "404": {
+            "description": "Usuário não existente na base de dados."
+          },
+          "500": {
+            "description": "Não foi possível buscar o endereço."
+          }
+        }
+      }
+    },
+    "/products": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Obter todos os produtos cadastrados no Banco de Dados.",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de produtos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Products"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar produtos."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Product"],
+        "summary": "Cadastrar um produto no Banco de Dados.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Produto já existente na base de dados. Quantidade atualizada."
+          },
+          "201": {
+            "description": "Novo produto cadastrado."
+          },
+          "500": {
+            "description": "Falha ao cadastrar produto ou estoque."
+          }
+        }
+      }
+    },
+    "/products/{param}": {
+      "get": {
+        "tags": ["Product"],
+        "summary": "Filtrar produto por ID ou CATEGORIA.",
+        "parameters": [
+          {
+            "name": "param",
+            "in": "path",
+            "required": true,
+            "description": "ID ou CATEGORIA do Produtos a ser buscado.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista com o produto buscado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Products"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Produto não encontrado."
+          },
+          "400": {
+            "description": "Categoria de produto não encontrada."
+          },
+          "500": {
+            "description": "Falha na consulta de produtos."
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "put": {
+        "tags": ["Product"],
+        "summary": "Atualizar produto.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Produto a ser atualizado.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Registro do usuário atualizado com sucesso."
+          },
+          "400": {
+            "description": "Senha atual inválida."
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          },
+          "500": {
+            "description": "Falha ao atualizar conta do usuário."
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Product"],
+        "summary": "Deletar um produto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Produto a ser atualizado.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Produto não consta na base de dados."
+          },
+          "200": {
+            "description": "Produto deletado com sucesso."
+          },
+          "500": {
+            "description": "Não foi possível remover o produto."
+          }
+        }
+      }
+    },
+    "/stocks": {
+      "get": {
+        "tags": ["Stock"],
+        "summary": "Obter estoque de todos os produtos.",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de estoque de produtos.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Stock"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar lista de estoque."
+          }
+        }
+      }
+    },
+    "/stocks/{id}": {
+      "put": {
+        "tags": ["Stock"],
+        "summary": "Atualizar estoque.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Estoque do produto a ser atualizado.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStock"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Estoque do produto atualizado com sucesso."
+          },
+          "400": {
+            "description": "Senha atual inválida."
+          },
+          "500": {
+            "description": "Falha ao atualizar o estoque do produto."
+          }
+        }
+      }
+    },
+    "/ratings": {
+      "get": {
+        "tags": ["Ratings"],
+        "summary": "Obter todas as avaliações de produto.",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de avaliações de cada produto.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Rating"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar avaliações."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Ratings"],
+        "summary": "Cadastrar uma nova avaliação.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRating"
+              }
+            }
+          }
+        },
+        "responses": {}
+      }
+    },
+    "/colors": {
+      "get": {
+        "tags": ["Color"],
+        "summary": "Obter todas as cores.",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de cores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Color"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar as cores."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Color"],
+        "summary": "Cadastrar uma nova cor.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterColor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Cor já existente na base de dados."
+          },
+          "500": {
+            "description": "Falha ao cadastrar nova cor."
+          },
+          "201": {
+            "description": "Nova cor cadastrada na base de dados."
+          }
+        }
+      }
+    },
+    "/colors/{id}": {
+      "put": {
+        "tags": ["Color"],
+        "summary": "Atualizar uma cor.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Cor a ser atualizada.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateColor"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Cor não consta na base de dados."
+          },
+          "500": {
+            "description": "Falha ao atualizar cor."
+          },
+          "201": {
+            "description": "Cor alterada na base de dados."
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Color"],
+        "summary": "Deletar uma cor.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Cor a ser deletada.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Cor não consta na base de dados."
+          },
+          "200": {
+            "description": "Cor deletada com sucesso."
+          },
+          "500": {
+            "description": "Não foi possível remover a cor."
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": ["Categorie"],
+        "summary": "Obter todas as categorias.",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de categorias",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Categorie"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar as categorias."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Categorie"],
+        "summary": "Cadastrar uma nova categoria.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterCategorie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Categoria já existente na base de dados."
+          },
+          "500": {
+            "description": "Falha ao cadastrar nova categoria."
+          },
+          "201": {
+            "description": "Nova categoria cadastrada na base de dados."
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "put": {
+        "tags": ["Categorie"],
+        "summary": "Atualizar uma categoria.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Categoria a ser atualizada.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategorie"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Categoria não consta na base de dados."
+          },
+          "500": {
+            "description": "Falha ao atualizar categoria."
+          },
+          "201": {
+            "description": "Categoria alterada na base de dados."
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Categorie"],
+        "summary": "Deletar uma categoria.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Categoria a ser deletada.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Categoria não consta na base de dados."
+          },
+          "200": {
+            "description": "Categoria deletada com sucesso."
+          },
+          "500": {
+            "description": "Não foi possível remover a categoria."
+          }
+        }
+      }
+    },
+    "/storages": {
+      "get": {
+        "tags": ["Storage"],
+        "summary": "Obter todos os armazenamentos.",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de armazenamento.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Storage"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar os armazenamentos."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Storage"],
+        "summary": "Cadastrar um novo armazenamento.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterStorage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Armazenamento já existente na base de dados."
+          },
+          "500": {
+            "description": "Falha ao cadastrar novo armazenamento."
+          },
+          "201": {
+            "description": "Novo armazenamento cadastrado na base de dados."
+          }
+        }
+      }
+    },
+    "/storages/{id}": {
+      "put": {
+        "tags": ["Storage"],
+        "summary": "Atualizar um armazenamento.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Armazenamento a ser atualizado.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStorage"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "Armazenamento não consta na base de dados."
+          },
+          "500": {
+            "description": "Falha ao atualizar armazenamento."
+          },
+          "201": {
+            "description": "Armazenamento alterado na base de dados."
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Storage"],
+        "summary": "Deletar um armazenamento.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Armazenamento a ser deletado.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Armazenamento não consta na base de dados."
+          },
+          "200": {
+            "description": "Armazenamento deletado com sucesso."
+          },
+          "500": {
+            "description": "Não foi possível remover o armazenamento."
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "tags": ["Order"],
+        "summary": "Lista de produtos comprados",
+        "responses": {
+          "200": {
+            "description": "Retorna uma lista de produtos que foram comprados.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Order"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha ao buscar os pedidos."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Order"],
+        "summary": "Cadastrar um novo pedido."
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do usuário"
+          },
+          "email": {
+            "type": "string",
+            "description": "E-mail do usuário"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "CPF do usuário"
+          },
+          "cellphone": {
+            "type": "string",
+            "description": "Número de celular do usuário"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Nome do usuário"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Sobrenome do usuário"
+          },
+          "date_birth": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de nascimento do usuário"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de criação da conta do usuário"
+          },
+          "last_login": {
+            "type": "string",
+            "format": "date",
+            "description": "Data do último acesso do usuário"
+          },
+          "admin_auth": {
+            "type": "boolean",
+            "description": "Permissão do usuário"
+          },
+          "password_hash": {
+            "type": "string",
+            "description": "Senha da conta do usuário"
+          }
+        }
+      },
+      "UpdateUser": {
+        "type": "object",
+        "required": ["password_hash", "date_birth", "cellphone"],
+        "properties": {
+          "password_hash": {
+            "type": "string",
+            "description": "Senha da conta do usuário"
+          },
+          "date_birth": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de nascimento do usuário"
+          },
+          "cellphone": {
+            "type": "string",
+            "description": "Número de celular do usuário"
+          }
+        }
+      },
+      "RegisterUser": {
+        "type": "object",
+        "required": [
+          "email",
+          "password_hash",
+          "cpf",
+          "first_name",
+          "last_name",
+          "cellphone",
+          "date_birth"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "E-mail do usuário"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "CPF do usuário"
+          },
+          "cellphone": {
+            "type": "string",
+            "description": "Número de celular do usuário"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Nome do usuário"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Sobrenome do usuário"
+          },
+          "date_birth": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de nascimento do usuário"
+          },
+          "password_hash": {
+            "type": "string",
+            "description": "Senha da conta do usuário"
+          }
+        }
+      },
+      "Color": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID da Cor"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da cor"
+          }
+        }
+      },
+      "RegisterColor": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome da cor"
+          }
+        }
+      },
+      "UpdateColor": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID da Cor a ser atualizada"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da nova cor"
+          }
+        }
+      },
+      "Storage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do Armazenamento"
+          },
+          "capacity": {
+            "type": "string",
+            "description": "Nome do Armazenamento"
+          }
+        }
+      },
+      "RegisterStorage": {
+        "type": "object",
+        "required": ["capacity"],
+        "properties": {
+          "capacity": {
+            "type": "string",
+            "description": "Nome da cor"
+          }
+        }
+      },
+      "UpdateStorage": {
+        "type": "object",
+        "required": ["id", "capacity"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do Armazenamento a ser atualizado"
+          },
+          "capacity": {
+            "type": "string",
+            "description": "Nova capacidade"
+          }
+        }
+      },
+      "Categorie": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID da Categoria"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da Categoria"
+          }
+        }
+      },
+      "RegisterCategorie": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome da Categoria"
+          }
+        }
+      },
+      "UpdateCategorie": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID da Categoria a ser atualizada"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome da nova Categoria"
+          }
+        }
+      },
+      "Products": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID do Produto"
+          },
+          "name": {
+            "type": "string",
+            "description": "Nome do Produto"
+          },
+          "price": {
+            "type": "number",
+            "description": "Preço do Produto"
+          },
+          "black_friday": {
+            "type": "boolean",
+            "description": "Black Friday do Produto"
+          },
+          "discount": {
+            "type": "number",
+            "description": "Desconto do Produto"
+          },
+          "average_score": {
+            "type": "number",
+            "description": "Média de Avaliação do Produto"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do Produto"
+          },
+          "color_id": {
+            "type": "integer",
+            "description": "Cor do Produto"
+          },
+          "colors": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "ID da Cor"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome da Cor"
+              }
+            }
+          },
+          "storage_id": {
+            "type": "integer",
+            "description": "Armazenamento do Produto"
+          },
+          "storages": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "ID do Armazenamento"
+              },
+              "capacity": {
+                "type": "number",
+                "description": "Capacidade de Armazenamento"
+              }
+            }
+          },
+          "categorie_id": {
+            "type": "integer",
+            "description": "Categoria do Produto"
+          },
+          "categories": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "ID da Categoria"
+              },
+              "name": {
+                "type": "string",
+                "description": "Categoria do Produto"
+              }
+            }
+          },
+          "ean": {
+            "type": "string",
+            "description": "Número de Identificação do Produto"
+          },
+          "highlight": {
+            "type": "boolean",
+            "description": "Produto é novidade ou não"
+          },
+          "image": {
+            "type": "string",
+            "description": "Imagem do Produto"
+          },
+          "black_friday_offer": {
+            "type": "boolean",
+            "description": "Oferta Black Friday de Produtos específicos"
+          }
+        }
+      },
+      "RegisterProduct": {
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "black_friday",
+          "discount",
+          "description",
+          "color_id",
+          "storage_id",
+          "categorie_id",
+          "ean",
+          "highlight",
+          "image",
+          "black_friday_offer"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do Produto"
+          },
+          "price": {
+            "type": "number",
+            "description": "Preço do Produto"
+          },
+          "black_friday": {
+            "type": "boolean",
+            "description": "Black Friday do Produto"
+          },
+          "discount": {
+            "type": "number",
+            "description": "Desconto do Produto"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do Produto"
+          },
+          "color_id": {
+            "type": "integer",
+            "description": "Cor do Produto"
+          },
+          "storage_id": {
+            "type": "integer",
+            "description": "Armazenamento do Produto"
+          },
+          "categorie_id": {
+            "type": "integer",
+            "description": "Categoria do Produto"
+          },
+          "ean": {
+            "type": "string",
+            "description": "Número de Identificação do Produto"
+          },
+          "highlight": {
+            "type": "boolean",
+            "description": "Produto é novidade ou não"
+          },
+          "image": {
+            "type": "string",
+            "description": "Imagem do Produto"
+          },
+          "black_friday_offer": {
+            "type": "boolean",
+            "description": "Oferta Black Friday de Produtos específicos"
+          }
+        }
+      },
+      "UpdateProduct": {
+        "type": "object",
+        "required": [
+          "name",
+          "price",
+          "black_friday",
+          "discount",
+          "description",
+          "color_id",
+          "storage_id",
+          "categorie_id",
+          "ean",
+          "highlight",
+          "image",
+          "black_friday_offer"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Nome do Produto"
+          },
+          "price": {
+            "type": "number",
+            "description": "Preço do Produto"
+          },
+          "black_friday": {
+            "type": "boolean",
+            "description": "Black Friday do Produto"
+          },
+          "discount": {
+            "type": "number",
+            "description": "Desconto do Produto"
+          },
+          "average_score": {
+            "type": "number",
+            "description": "Média de Avaliação do Produto"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição do Produto"
+          },
+          "color_id": {
+            "type": "integer",
+            "description": "Cor do Produto"
+          },
+          "storage_id": {
+            "type": "integer",
+            "description": "Armazenamento do Produto"
+          },
+          "categorie_id": {
+            "type": "integer",
+            "description": "Categoria do Produto"
+          },
+          "ean": {
+            "type": "string",
+            "description": "Número de Identificação do Produto"
+          },
+          "highlight": {
+            "type": "boolean",
+            "description": "Produto é novidade ou não"
+          },
+          "image": {
+            "type": "string",
+            "description": "Imagem do Produto"
+          },
+          "black_friday_offer": {
+            "type": "boolean",
+            "description": "Oferta Black Friday de Produtos específicos"
+          }
+        }
+      }
+    }
+  }
+}
